@@ -1,6 +1,7 @@
 import React from "react";
-import ProjectItemHard from "../../components/projectItemHard";
 import ProjectItem from "../../components/projectItem";
+import Project from "../../interfaces/Project";
+import Metadata from "../../interfaces/Metadata";
 
 const project: Project = {
   id: "1",
@@ -29,18 +30,6 @@ const metadata: Metadata = {
     impactCategory: ["Technology", "Finance"],
   },
 };
-interface Project {
-  id: string;
-  recipient: string;
-  name: string;
-  shortDescription: string;
-}
-interface Metadata {
-  data: {
-    bio: string;
-    impactCategory: string[];
-  };
-}
 
 export default function Page() {
   return (

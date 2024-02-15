@@ -4,18 +4,10 @@ import { Heading } from "./ui/Heading";
 import { Skeleton } from "./ui/Skeleton";
 import { ImpactCategories } from "./ImpactCategories";
 import { Button } from "./ui/Button";
+import { type Address } from "viem";
+import Project from "../interfaces/Project";
+import Metadata from "../interfaces/Metadata";
 
-interface Project {
-  id: string;
-  recipient: string;
-  name: string;
-}
-interface Metadata {
-  data: {
-    bio: string;
-    impactCategory: string[];
-  };
-}
 export default function ProjectItem({
   project,
   metadata,

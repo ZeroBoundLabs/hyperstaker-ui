@@ -270,7 +270,6 @@ const PopupWidget = () => {
                           <a
                             href="https://Web3Forms.com"
                             className="text-gray-600"
-                            target="_blank"
                             rel="noopener noreferrer"
                           >
                             Web3Forms
