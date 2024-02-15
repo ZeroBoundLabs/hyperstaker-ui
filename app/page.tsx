@@ -1,6 +1,4 @@
-import Head from "next/head";
 import Hero from "../components/hero";
-import Navbar from "../components/navbar";
 import SectionTitle from "../components/sectionTitle";
 
 import { benefitOne, benefitTwo } from "../components/data";
@@ -15,16 +13,6 @@ import PopupWidget from "../components/popupWidget";
 const Home = () => {
   return (
     <>
-      <Head>
-        <title>Nextly - Free Nextjs & TailwindCSS Landing Page Template</title>
-        <meta
-          name="description"
-          content="Predict which project will be the next big thing, and secure a vested interest in it."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <Navbar />
       <Hero />
       <SectionTitle pretitle="How does it work?" title=" How does it work?">
         Predict which project will be the next big thing, and secure a vested
