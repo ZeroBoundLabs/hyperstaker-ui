@@ -13,7 +13,7 @@ const Hero = () => {
               Predict, Fund, Prosper
             </h1>
             <p className="py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl dark:text-gray-300">
-              Your Insight, Everyone&quote;s Reward.
+              Your Insight, Everyone&apos;s Reward.
             </p>
 
             <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
