@@ -1,3 +1,4 @@
+"use client";
 import { ProjectAvatar } from "./ProjectAvatar";
 import { ProjectBanner } from "./ProjectBanner";
 import { Heading } from "./ui/Heading";
@@ -8,8 +9,10 @@ import { type Address } from "viem";
 import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
 import Link from "next/link";
+//import Fund from "./fund";
+import Fund from "./send-transaction";
 
-export default function ProjectItem({
+export default function FundProject({
   project,
   metadata,
   isLoading,
@@ -19,7 +22,7 @@ export default function ProjectItem({
   isLoading: boolean;
 }) {
   return (
-    <div className="basis-10/12 mx-2">
+    <div className="basis-10/12 mx-auto">
       <article
         data-testid={`project-${project.id}`}
         className=" group rounded-2xl border border-gray-200 p-2 hover:border-primary-500 dark:border-gray-700 dark:hover:border-primary-500"
@@ -37,27 +40,29 @@ export default function ProjectItem({
           />
         </div>
         <div className="px-4">
-          <Heading className="truncate" size="lg" as="h3">
-            <Skeleton isLoading={isLoading}>{project?.name}</Skeleton>
-          </Heading>
-          <div className="mb-2">
-            <p className="line-clamp-2 h-10 text-sm dark:text-gray-300">
-              <Skeleton isLoading={isLoading} className="w-full">
-                {project?.shortDescription}
+          <div className="flex">
+            <div className="flex-1">
+              <Heading className="truncate" size="lg" as="h3">
+                <Skeleton isLoading={isLoading}>{project?.name}</Skeleton>
+              </Heading>
+              <div className="mb-2">
+                <p className="line-clamp-2 h-10 text-sm dark:text-gray-300">
+                  <Skeleton isLoading={isLoading} className="w-full">
+                    {project?.longDescription || project?.shortDescription}
+                  </Skeleton>
+                </p>
+              </div>
+              <Skeleton isLoading={isLoading} className="w-[100px]">
+                <ImpactCategories tags={metadata?.data?.impactCategory} />
               </Skeleton>
-            </p>
+            </div>
+            <div className="flex-1">
+              {/* <h3>Fund this project</h3> */}
+              <Fund project={project} />
+              {/* <Fund project={project} /> */}
+            </div>
           </div>
-          <Skeleton isLoading={isLoading} className="w-[100px]">
-            <ImpactCategories tags={metadata?.data?.impactCategory} />
-          </Skeleton>
         </div>
-
-        <Link
-          href={`/fund/${project.slug}`}
-          className="block mt-6 w-full px-4 py-3 text-lg font-medium text-center text-white bg-indigo-600 rounded-md"
-        >
-          Fund this project
-        </Link>
       </article>
     </div>
   );
