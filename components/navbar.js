@@ -3,6 +3,7 @@ import Link from "next/link";
 import ThemeChanger from "./DarkSwitch";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Navbar = () => {
   const navigation = [
@@ -69,12 +70,7 @@ const Navbar = () => {
                         {item.page}
                       </Link>
                     ))}
-                    <Link
-                      href="/"
-                      className="w-full px-6 py-2 mt-3 text-center text-white bg-indigo-600 rounded-md lg:ml-5"
-                    >
-                      Get Started
-                    </Link>
+                    <ConnectButton />
                   </>
                 </Disclosure.Panel>
               </div>
@@ -99,13 +95,7 @@ const Navbar = () => {
         </div>
 
         <div className="hidden mr-3 space-x-4 lg:flex nav__item">
-          <Link
-            href="/"
-            className="px-6 py-2 text-white bg-indigo-600 rounded-md md:ml-5"
-          >
-            Get Started
-          </Link>
-
+          <ConnectButton />
           <ThemeChanger />
         </div>
       </nav>
