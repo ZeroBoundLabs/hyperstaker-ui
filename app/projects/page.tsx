@@ -8,22 +8,28 @@ const project: Project = {
   recipient: "0x123",
   name: "HyperStaker",
   shortDescription: "A project to predict the next big thing",
+  avatarUrl: "/img/hs-logo-small.jpg",
+  bannerUrl: "/img/hs-banner.jpg",
 };
+
 const project2: Project = {
   id: "2",
   recipient: "0x123",
-  name: "FUX",
+  name: "Funding the commons",
   shortDescription:
-    "Gain perspective on how to allocate your most valuable asset: your attention.",
+    "We envision a world where the incentives that govern human coordination at scale push our species to develop an economy that prioritizes public goods above all else.",
+  avatarUrl: "/img/ftc-square.jpg",
+  bannerUrl: "/img/ftc-banner.jpg",
 };
 const project3: Project = {
   id: "3",
   recipient: "0x123",
-  name: "IRSF",
+  name: "FUX",
   shortDescription:
-    "A decentralized network of refugees mutually educating and financially supporting each other",
+    "Gain perspective on how to allocate your most valuable asset: your attention.",
+  avatarUrl: "",
+  bannerUrl: "",
 };
-
 const metadata: Metadata = {
   data: {
     bio: "A project to predict the next big thing",
