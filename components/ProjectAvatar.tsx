@@ -5,7 +5,9 @@ import { Avatar } from "./ui/Avatar";
 
 // TODO: ProfileMetadata
 export function ProjectAvatar(
-  props: { address: Address; url: string } & ComponentProps<typeof Avatar>
+  props: { address: Address | string; url: string } & ComponentProps<
+    typeof Avatar
+  >
 ) {
   // const profile = useProfileWithMetadata(props.profileId);
   // const { profileImageUrl } = profile.data ?? {};

@@ -6,7 +6,9 @@ import { Banner } from "./ui/Banner";
 const profileImageUrl = "/img/hs-banner.jpg";
 
 export function ProjectBanner(
-  props: { profileId: Address; url: string } & ComponentProps<typeof Banner>
+  props: { profileId: Address | string; url: string } & ComponentProps<
+    typeof Banner
+  >
 ) {
   return (
     <div className="overflow-hidden rounded-3xl">

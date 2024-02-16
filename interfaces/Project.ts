@@ -5,6 +5,7 @@ export default interface Project {
   recipient: Address | string;
   name: string;
   shortDescription: string;
+  longDescription: string;
   avatarUrl: string;
   bannerUrl: string;
   slug: string;

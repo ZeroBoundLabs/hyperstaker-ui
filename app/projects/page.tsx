@@ -8,8 +8,9 @@ export default function Page() {
     <div className="container mx-auto">
       <div className="flex flex-row">
         {projects &&
-          projects.map((project) => (
+          projects.map((project, key) => (
             <ProjectItem
+              key={key}
               project={project}
               metadata={metadata}
               isLoading={false}
