@@ -1,7 +1,8 @@
 const projects = [
   {
     id: "1",
-    recipient: "0x123",
+    //recipient: "0x0c2227c06624954FdB0bd7F379A3D697B49C1cFc",
+    recipient: "0x4927156128a77FC998D34B0eEcB45E8188aDa9F1",
     name: "HyperStaker",
     shortDescription: "A project to predict the next big thing",
     longDescription:
@@ -12,7 +13,7 @@ const projects = [
   },
   {
     id: "2",
-    recipient: "0x123",
+    recipient: "0x576edCed7475D8F64a5e2D5227c93Ca57d7f5d20",
     name: "Funding the commons",
     shortDescription:
       "We envision a world where the incentives that govern human coordination at scale push our species to develop an economy that prioritizes public goods above all else.",

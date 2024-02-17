@@ -9,7 +9,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   )[0];
   return (
     <div className="container mx-auto">
-      <div className="flex flex-row">
+      <div className="">
         <FundProject project={project} metadata={metadata} isLoading={false} />
       </div>
     </div>

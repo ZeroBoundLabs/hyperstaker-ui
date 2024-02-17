@@ -8,7 +8,7 @@ import { Button } from "./ui/Button";
 import { type Address } from "viem";
 import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
-//import Link from "next/link";
+import Link from "next/link";
 import Fund from "./fund";
 
 export default function FundProject({
@@ -40,20 +40,73 @@ export default function FundProject({
         </div>
         <div className="px-4">
           <div className="flex">
-            <div className="flex-1">
-              <Heading className="truncate" size="lg" as="h3">
-                <Skeleton isLoading={isLoading}>{project?.name}</Skeleton>
-              </Heading>
+            <div className="p-2 mr-16  flex-1">
+              <h3>{project?.name}</h3>
               <div className="mb-2">
-                <p className="line-clamp-2 h-10 text-sm dark:text-gray-300">
+                <p className="h-10 text-sm dark:text-gray-300">
                   <Skeleton isLoading={isLoading} className="w-full">
-                    {project?.longDescription || project?.shortDescription}
+                    {project?.longDescription || project?.longDescription}
                   </Skeleton>
                 </p>
               </div>
-              <Skeleton isLoading={isLoading} className="w-[100px]">
+              <div className="mb-24">
+                <Skeleton isLoading={isLoading} className="w-full">
+                  <h4>About this round</h4>
+                  <p>
+                    This is a <Link href="/">fixed raise round</Link>, which
+                    means that the prospective funding round will be open until
+                    the project raises it's funding goal.
+                  </p>
+                  <div className="">
+                    <h5>
+                      Funds raised <span className="float-right">40%</span>
+                    </h5>
+
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                      <div
+                        style={{ width: "45%" }}
+                        className="mb-4 bg-blue-600 h-2.5 rounded-full"
+                      ></div>
+                      <div className="flex justify-between items-center mb-4">
+                        <div>
+                          <div className="text-sm font-medium text-gray-100">
+                            Past Funding
+                          </div>
+                          <div className="text-2xl font-bold text-gray-200">
+                            $0
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-sm font-medium text-gray-100">
+                            Target
+                          </div>
+                          <div className="text-2xl font-bold text-gray-300">
+                            $100k
+                          </div>
+                          <div className="text-xs text-gray-200">
+                            20% of prev RPGF
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-gray-200">
+                            RPGF4 Split
+                          </div>
+                          <div className="text-2xl font-bold text-gray-300">
+                            10.25%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* <button className="bg-red-500 text-white w-full py-3 rounded-lg font-medium hover:bg-red-600">
+                        DONATE
+                      </button> */}
+                  </div>
+                </Skeleton>
+              </div>
+              {/* <Skeleton isLoading={isLoading} className="w-[100px]">
                 <ImpactCategories tags={metadata?.data?.impactCategory} />
-              </Skeleton>
+              </Skeleton> */}
             </div>
             <div className="flex-1">
               {/* <h3>Fund this project</h3> */}
