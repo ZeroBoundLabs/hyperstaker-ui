@@ -38,7 +38,6 @@ const Fund: React.FC<FundProps> = ({ project }) => {
     const formData = new FormData(e.target as HTMLFormElement);
     const to = formData.get("address") as `0x${string}`;
     const value = formData.get("value") as string;
-    debugger;
     sendTransaction({ to, value: parseEther(value) });
   }
   const handleTokenChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -116,7 +115,7 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 </span>
               )}
             </div>
-            <h4>This project's funding life cycle</h4>
+            <h4>This project&apos;s funding life cycle</h4>
             <h5 className="hyper">Step 1</h5>
             <p className="hyper">
               You have just donated to this public goods project

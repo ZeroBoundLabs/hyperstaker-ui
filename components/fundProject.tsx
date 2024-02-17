@@ -55,7 +55,7 @@ export default function FundProject({
                   <p>
                     This is a <Link href="/">fixed raise round</Link>, which
                     means that the prospective funding round will be open until
-                    the project raises it's funding goal.
+                    the project raises it&apos;s funding goal.
                   </p>
                   <div className="">
                     <h5>
