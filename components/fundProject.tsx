@@ -73,7 +73,7 @@ export default function FundProject({
                             Past Funding
                           </div>
                           <div className="text-2xl font-bold text-gray-200">
-                            $0
+                            1.2 ETH
                           </div>
                         </div>
 
@@ -82,7 +82,7 @@ export default function FundProject({
                             Target
                           </div>
                           <div className="text-2xl font-bold text-gray-300">
-                            $100k
+                            40 ETH
                           </div>
                           <div className="text-xs text-gray-200">
                             20% of prev RPGF
@@ -90,10 +90,10 @@ export default function FundProject({
                         </div>
                         <div>
                           <div className="text-sm font-medium text-gray-200">
-                            RPGF4 Split
+                            Retro split
                           </div>
                           <div className="text-2xl font-bold text-gray-300">
-                            10.25%
+                            20%
                           </div>
                         </div>
                       </div>

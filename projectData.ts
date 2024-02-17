@@ -1,8 +1,7 @@
 const projects = [
   {
     id: "1",
-    //recipient: "0x0c2227c06624954FdB0bd7F379A3D697B49C1cFc",
-    recipient: "0x4927156128a77FC998D34B0eEcB45E8188aDa9F1",
+    recipient: "0x0c2227c06624954FdB0bd7F379A3D697B49C1cFc",
     name: "HyperStaker",
     shortDescription: "A project to predict the next big thing",
     longDescription:
