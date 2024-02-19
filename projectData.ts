@@ -3,7 +3,8 @@ const projects = [
     id: "1",
     recipient: "0x0c2227c06624954FdB0bd7F379A3D697B49C1cFc",
     name: "HyperStaker",
-    shortDescription: "A project to predict the next big thing",
+    shortDescription:
+      "Bridging the funding gap between innovation and venture capital, by creating utility, value and demand for Hypercerts",
     longDescription:
       "Bridging the funding gap between innovation and venture capital, by creating utility, value and demand for Hypercerts",
     avatarUrl: "/img/hs-logo-small.jpg",
@@ -25,12 +26,12 @@ const projects = [
   {
     id: "3",
     recipient: "0x123",
-    name: "FUX",
+    name: "WERK",
     shortDescription:
       "Gain perspective on how to allocate your most valuable asset: your attention.",
     longDescription:
       "Gain perspective on how to allocate your most valuable asset: your attention.",
-    avatarUrl: "",
+    avatarUrl: "/img/werk-logo.png",
     bannerUrl: "",
     slug: "fux",
   },

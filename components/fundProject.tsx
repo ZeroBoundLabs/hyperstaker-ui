@@ -61,7 +61,6 @@ export default function FundProject({
                     <h5>
                       Funds raised <span className="float-right">40%</span>
                     </h5>
-
                     <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                       <div
                         style={{ width: "45%" }}
@@ -97,6 +96,12 @@ export default function FundProject({
                           </div>
                         </div>
                       </div>
+                      <div className="clear-both"></div>
+                    </div>
+                    <div className="clear-both"></div>
+                    <h5>Upcoming Retro rounds</h5>
+                    <div>
+                      <div>RPGF4: Applications open in April</div>
                     </div>
                     {/* <button className="bg-red-500 text-white w-full py-3 rounded-lg font-medium hover:bg-red-600">
                         DONATE
