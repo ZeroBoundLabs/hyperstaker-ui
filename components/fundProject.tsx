@@ -158,7 +158,7 @@ export default function FundProject({
                     </div>
                     <div className="clear-both"></div>
 
-                    <button className="disabled mt-40 bg-white text-red w-full py-3 rounded-lg font-medium hover:bg-zinc-200">
+                    <button className="disabled mt-40 bg-zinc-400 text-red w-full py-3 rounded-lg font-medium hover:bg-zinc-200">
                       Stake hypercerts (coming soon)
                     </button>
                   </div>
