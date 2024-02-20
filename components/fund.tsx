@@ -108,7 +108,7 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                   {isPending ? "Confirming..." : "Send"}
                 </button>
               )}
-              {!isConnected && <h4>Please connect your wallet to contiue</h4>}
+              {!isConnected && <p>Connect your wallet to contiue</p>}
               {/* <div className="flex flex-row">
               <select
                 className="bg-gray-700 text-white block w-full mx-0 p-2 border border-gray-300 rounded-md"

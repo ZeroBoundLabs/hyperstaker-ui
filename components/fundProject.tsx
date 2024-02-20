@@ -57,6 +57,15 @@ export default function FundProject({
       ),
     },
     {
+      value: "How and why stake hypercerts?",
+      emoji: "🎉",
+      description: (
+        <ul>
+          <li>All will be clear soon 🎉</li>
+        </ul>
+      ),
+    },
+    {
       value: "How will impact be evaluated?",
       emoji: "⚖️",
       description: (
@@ -146,9 +155,9 @@ export default function FundProject({
                     </div>
                     <div className="clear-both"></div>
 
-                    {/* <button className="bg-red-500 text-white w-full py-3 rounded-lg font-medium hover:bg-red-600">
-                        DONATE
-                      </button> */}
+                    <button className="disabled mt-40 bg-white text-red w-full py-3 rounded-lg font-medium hover:bg-zinc-200">
+                      Stake hypercerts (coming soon)
+                    </button>
                   </div>
                 </Skeleton>
               </div>
