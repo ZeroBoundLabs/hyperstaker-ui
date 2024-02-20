@@ -7,7 +7,7 @@ import {
   useAccount,
 } from "wagmi";
 import { parseEther } from "viem";
-import projects from "@/projectData";
+
 import Project from "../interfaces/Project";
 import { getTransactionExplorerUrl } from "../explorer";
 
@@ -77,9 +77,11 @@ const Fund: React.FC<FundProps> = ({ project }) => {
       <div className="space-y-4 space-x-4">
         {!hash && (
           <>
-            <h3>Support the future of public goods</h3>
+            <h4>Prospectively fund this project</h4>
             <p>
-              Enter the amount of ETH you would like to donate to this project.
+              Hyperstaker as allocated 20% of it's level 1 hypercert to this
+              round, and half of this will go to early stage funders, and they
+              will be distributed relative to the amount donated.
             </p>
             <div className="flex flex-row">
               <input
@@ -97,7 +99,16 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 onChange={handleAmountChange}
                 placeholder={`Enter ${selectedToken} amount`}
               />
-
+              {isConnected && (
+                <button
+                  className="p-2 mt-6 ml-2 text-white rounded-md bg-blue-500"
+                  disabled={isPending}
+                  type="submit"
+                >
+                  {isPending ? "Confirming..." : "Send"}
+                </button>
+              )}
+              {!isConnected && <h4>Please connect your wallet to contiue</h4>}
               {/* <div className="flex flex-row">
               <select
                 className="bg-gray-700 text-white block w-full mx-0 p-2 border border-gray-300 rounded-md"
@@ -122,17 +133,6 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 required
               />
             </div> */}
-
-              {isConnected && (
-                <button
-                  className="p-2 text-white rounded-md bg-blue-500"
-                  disabled={isPending}
-                  type="submit"
-                >
-                  {isPending ? "Confirming..." : "Send"}
-                </button>
-              )}
-              {!isConnected && <h4>Please connect your wallet to contiue</h4>}
             </div>
           </>
         )}
