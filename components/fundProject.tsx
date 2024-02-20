@@ -10,6 +10,7 @@ import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
 import Link from "next/link";
 import Fund from "./fund";
+import { Accordion } from "@mantine/core";
 
 export default function FundProject({
   project,
@@ -20,12 +21,29 @@ export default function FundProject({
   metadata: Metadata;
   isLoading: boolean;
 }) {
+  const milestones = [
+    {
+      value: "Milestone 1",
+      emoji: "🚀",
+      description: "This is the first milestone",
+    },
+    {
+      value: "Milestone 2",
+      emoji: "🚀",
+      description: "This is the second milestone",
+    },
+  ];
+  const stones = milestones.map((item) => (
+    <Accordion.Item key={item.value} value={item.value}>
+      <Accordion.Control icon={item.emoji}>{item.value}</Accordion.Control>
+      <Accordion.Panel>{item.description}</Accordion.Panel>
+    </Accordion.Item>
+  ));
+
   return (
     <div className="basis-10/12 mx-auto">
-      <article
-        data-testid={`project-${project.id}`}
-        className=" group rounded-2xl border border-gray-200 p-2 hover:border-primary-500 dark:border-gray-700 dark:hover:border-primary-500"
-      >
+      {/* data-testid={`project-${project.id}`} */}
+      <article className=" group rounded-2xl border border-gray-200 p-2 hover:border-primary-500 dark:border-gray-700 dark:hover:border-primary-500">
         <div className="opacity-70 transition-opacity group-hover:opacity-100">
           <ProjectBanner
             profileId={project?.recipient}
@@ -50,6 +68,7 @@ export default function FundProject({
                 </p>
               </div>
               <div className="mb-24">
+                <Accordion defaultValue="Milestone 1">{stones}</Accordion>
                 <Skeleton isLoading={isLoading} className="w-full">
                   <h4>About this round</h4>
                   <p>
