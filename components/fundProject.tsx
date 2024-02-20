@@ -21,19 +21,46 @@ export default function FundProject({
   metadata: Metadata;
   isLoading: boolean;
 }) {
-  const milestones = [
+  const content = [
     {
-      value: "Milestone 1",
-      emoji: "🚀",
+      value: "What is this project?",
+      emoji: "📡",
       description: "This is the first milestone",
     },
     {
-      value: "Milestone 2",
+      value: "How does this work?",
+      emoji: "🍺",
+      description: (
+        <>
+          <h4>About this round</h4>
+          <p>
+            This is a <Link href="/">fixed raise round</Link>, which means that
+            the prospective funding round will be open until the project raises
+            it&apos;s funding goal.
+          </p>
+        </>
+      ),
+    },
+    {
+      value: "Which retro rounds is this project applying for?",
       emoji: "🚀",
-      description: "This is the second milestone",
+      description: (
+        <>
+          <div>RPGF4: Applications open in April</div>
+        </>
+      ),
+    },
+    {
+      value: "How will impact be evaluated?",
+      emoji: "⚖️",
+      description: (
+        <ul>
+          <li>Project heartbeat impact evaluator</li>
+        </ul>
+      ),
     },
   ];
-  const stones = milestones.map((item) => (
+  const stones = content.map((item) => (
     <Accordion.Item key={item.value} value={item.value}>
       <Accordion.Control icon={item.emoji}>{item.value}</Accordion.Control>
       <Accordion.Panel>{item.description}</Accordion.Panel>
@@ -70,14 +97,8 @@ export default function FundProject({
               <div className="mb-24">
                 <Accordion defaultValue="Milestone 1">{stones}</Accordion>
                 <Skeleton isLoading={isLoading} className="w-full">
-                  <h4>About this round</h4>
-                  <p>
-                    This is a <Link href="/">fixed raise round</Link>, which
-                    means that the prospective funding round will be open until
-                    the project raises it&apos;s funding goal.
-                  </p>
                   <div className="">
-                    <h5>
+                    <h5 className="mt-8">
                       Funds raised <span className="float-right">40%</span>
                     </h5>
                     <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
@@ -118,10 +139,7 @@ export default function FundProject({
                       <div className="clear-both"></div>
                     </div>
                     <div className="clear-both"></div>
-                    <h5>Upcoming Retro rounds</h5>
-                    <div>
-                      <div>RPGF4: Applications open in April</div>
-                    </div>
+
                     {/* <button className="bg-red-500 text-white w-full py-3 rounded-lg font-medium hover:bg-red-600">
                         DONATE
                       </button> */}
