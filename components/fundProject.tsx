@@ -11,6 +11,7 @@ import Metadata from "../interfaces/Metadata";
 import Link from "next/link";
 import Fund from "./fund";
 import { Accordion } from "@mantine/core";
+import Timeline from "./Timeline";
 
 export default function FundProject({
   project,
@@ -25,18 +26,23 @@ export default function FundProject({
     {
       value: "What is this project?",
       emoji: "📡",
-      description: "This is the first milestone",
+      description:
+        "Hyperstaker bridges the funding gap between early research funding and later VC funding.",
     },
     {
       value: "How does this work?",
       emoji: "🍺",
       description: (
         <>
-          <h4>About this round</h4>
+          <h5>About this round</h5>
           <p>
             This is a <Link href="/">fixed raise round</Link>, which means that
             the prospective funding round will be open until the project raises
             it&apos;s funding goal.
+          </p>
+          <p>
+            Hyperstaker as allocated 20% of it's level 1 hypercert to this
+            round.
           </p>
         </>
       ),
@@ -123,9 +129,9 @@ export default function FundProject({
                           <div className="text-2xl font-bold text-gray-300">
                             40 ETH
                           </div>
-                          <div className="text-xs text-gray-200">
+                          {/* <div className="text-xs text-gray-200">
                             20% of prev RPGF
-                          </div>
+                          </div> */}
                         </div>
                         <div>
                           <div className="text-sm font-medium text-gray-200">
@@ -153,6 +159,10 @@ export default function FundProject({
             <div className="flex-1">
               {/* <h3>Fund this project</h3> */}
               <Fund project={project} />
+              <div className="mt-16 mx-6">
+                <h3>Project timeline</h3>
+                <Timeline />
+              </div>
               {/* <Fund project={project} /> */}
             </div>
           </div>

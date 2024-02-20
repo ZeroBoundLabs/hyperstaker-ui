@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NativeSelect, rem, TextInput } from "@mantine/core";
 import {
   type BaseError,
   useSendTransaction,
@@ -9,9 +10,17 @@ import { parseEther } from "viem";
 import projects from "@/projectData";
 import Project from "../interfaces/Project";
 import { getTransactionExplorerUrl } from "../explorer";
+import CoinInput from "./ui/CoinInput";
+
 interface FundProps {
   project: Project;
 }
+
+const coinData = [
+  { value: "EUR", label: "ETH" },
+  { value: "USDC", label: "USDC" },
+  { value: "DAI", label: "DAI" },
+];
 
 const Fund: React.FC<FundProps> = ({ project }) => {
   const { chain, isConnected } = useAccount();
@@ -47,6 +56,22 @@ const Fund: React.FC<FundProps> = ({ project }) => {
     useWaitForTransactionReceipt({
       hash,
     });
+  const select = (
+    <NativeSelect
+      data={coinData}
+      rightSectionWidth={28}
+      styles={{
+        input: {
+          fontWeight: 500,
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+          width: rem(92),
+          marginRight: rem(-2),
+        },
+      }}
+      onChange={handleTokenChange}
+    />
+  );
 
   return (
     <form onSubmit={submit}>
@@ -65,7 +90,16 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 required
                 value={project.recipient}
               />
-              {/* <input name="value" placeholder="0.05" required /> */}
+              <TextInput
+                type="number"
+                label="How much would you like to donate?"
+                rightSection={select}
+                rightSectionWidth={92}
+                onChange={handleAmountChange}
+                placeholder={`Enter ${selectedToken} amount`}
+              />
+            </div>
+            {/* <div className="flex flex-row">
               <select
                 className="bg-gray-700 text-white block w-full mx-0 p-2 border border-gray-300 rounded-md"
                 value={selectedToken}
@@ -88,7 +122,7 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 name="value"
                 required
               />
-            </div>
+            </div> */}
             <div>
               {isConnected && (
                 <button
