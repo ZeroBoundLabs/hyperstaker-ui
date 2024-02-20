@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Rainbow from "./rainbow";
+
 import { createTheme, ColorSchemeScript, MantineProvider } from "@mantine/core";
 
 //const theme = createTheme({ colorScheme: "dark" });
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript />
+        {/* <ColorSchemeScript /> */}
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
@@ -25,11 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="dark">
-          <div>
-            <Rainbow>{children}</Rainbow>
-          </div>
-        </MantineProvider>
+        <MantineProvider defaultColorScheme="dark">{children}</MantineProvider>
       </body>
     </html>
   );

@@ -1,14 +1,13 @@
 import Navbar from "../components/navbar";
+import Rainbow from "./rainbow";
 
 export default function Template({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <head>
-        <link rel="icon" href="/favicon-16x16.png" type="image/png" />
-      </head>
-
-      <Navbar />
-      {children}
+      <Rainbow>
+        <Navbar />
+        {children}
+      </Rainbow>
     </div>
   );
 }
