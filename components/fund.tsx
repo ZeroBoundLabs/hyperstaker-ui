@@ -79,9 +79,9 @@ const Fund: React.FC<FundProps> = ({ project }) => {
           <>
             <h4>Prospectively fund this project</h4>
             <p>
-              Hyperstaker as allocated 20% of it's level 1 hypercert to this
-              round, and half of this will go to early stage funders, and they
-              will be distributed relative to the amount donated.
+              Hyperstaker as allocated 20% of it&apos;s level 1 hypercert to
+              this round, and half of this will go to early stage funders, and
+              they will be distributed relative to the amount donated.
             </p>
             <div className="flex flex-row">
               <input
