@@ -41,7 +41,7 @@ export default function FundProject({
             it&apos;s funding goal.
           </p>
           <p>
-            Hyperstaker as allocated 20% of it's level 1 hypercert to this
+            Hyperstaker as allocated 20% of it&apos;s level 1 hypercert to this
             round.
           </p>
         </>

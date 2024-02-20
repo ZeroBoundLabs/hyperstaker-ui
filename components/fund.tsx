@@ -10,7 +10,6 @@ import { parseEther } from "viem";
 import projects from "@/projectData";
 import Project from "../interfaces/Project";
 import { getTransactionExplorerUrl } from "../explorer";
-import CoinInput from "./ui/CoinInput";
 
 interface FundProps {
   project: Project;
@@ -98,8 +97,8 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 onChange={handleAmountChange}
                 placeholder={`Enter ${selectedToken} amount`}
               />
-            </div>
-            {/* <div className="flex flex-row">
+
+              {/* <div className="flex flex-row">
               <select
                 className="bg-gray-700 text-white block w-full mx-0 p-2 border border-gray-300 rounded-md"
                 value={selectedToken}
@@ -123,7 +122,7 @@ const Fund: React.FC<FundProps> = ({ project }) => {
                 required
               />
             </div> */}
-            <div>
+
               {isConnected && (
                 <button
                   className="p-2 text-white rounded-md bg-blue-500"

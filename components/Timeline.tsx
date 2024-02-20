@@ -53,7 +53,7 @@ export default function ProjectTimeline() {
       >
         <Text c="dimmed" size="sm">
           <Text variant="link" component="span" inherit>
-            Application will be made to Gitcoin citizen's round
+            Application will be made to Gitcoin citizen&apos;s round
           </Text>{" "}
         </Text>
         <Text size="xs" mt={4}>

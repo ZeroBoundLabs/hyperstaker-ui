@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { createTheme, ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 
-//const theme = createTheme({ colorScheme: "dark" });
-
-const inter = Inter({ subsets: ["latin"] });
+//const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
