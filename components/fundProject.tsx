@@ -61,7 +61,10 @@ export default function FundProject({
       emoji: "🎉",
       description: (
         <ul>
-          <li>All will be clear soon 🎉</li>
+          <li>
+            A full explanation of the how and why of hypercert staking is coming
+            soon 🎉
+          </li>
         </ul>
       ),
     },
