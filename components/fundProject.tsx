@@ -48,6 +48,20 @@ export default function FundProject({
       ),
     },
     {
+      value: "How can I acquire Hypercerts?",
+      emoji: "🍺",
+      description: (
+        <>
+          <h5>Be a contributor!</h5>
+          <p>
+            Each project is free to allocate Hypercerts in it&apos;s own way.
+            It&apos;s usually best to talk to the project directly, and ask how
+            you can best support them.
+          </p>
+        </>
+      ),
+    },
+    {
       value: "Which retro rounds is this project applying for?",
       emoji: "🚀",
       description: (
