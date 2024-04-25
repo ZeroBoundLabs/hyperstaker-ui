@@ -6,9 +6,23 @@
 
 # 🦄 Hyperstaker
 
+[Overview](#overview) •
+[Features](#features) •
+[Contribute](#contribute) •
+
 ## Overview <a name="overview"></a>
 
 Hyperstaker super charges early stage software projects by attaching early contributors to future any project success.
+
+## Features <a name="features"></a>
+
+- Enables donations to projects
+- Staking on Hypercerts (coming soon)
+
+## Contribute <a name="contribute"></a>
+
+Contact us on Twitter or Discord to talk
+
 
 <br>
 
