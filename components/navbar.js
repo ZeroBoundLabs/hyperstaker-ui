@@ -23,7 +23,7 @@ const Navbar = () => {
                   <span className="flex items-center space-x-2 text-2xl font-medium text-indigo-500 dark:text-gray-100">
                     <span>
                       <Image
-                        src="/img/hs-logo-small.jpg"
+                        src="/img/logo.png"
                         alt="N"
                         width="32"
                         height="32"
