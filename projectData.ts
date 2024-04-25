@@ -25,7 +25,7 @@ const projects = [
   },
   {
     id: "3",
-    recipient: "0x123",
+    recipient: "",
     name: "WERK",
     shortDescription:
       "Gain perspective on how to allocate your most valuable asset: your attention.",
