@@ -22,8 +22,8 @@ const Home = () => {
         <SectionTitle pretitle="How does it work?" title=" How does it work?">
           <ul>
             <li>
-              Projects choose whether to do a 'fixed amount' or a 'fixed
-              duration' raise.
+              Projects choose whether to do a &apos;fixed amount&apos; or a
+              &apos;fixed duration&apos; raise.
             </li>
             <li>
               The project mints a Hypercert and deposits it into the vault
