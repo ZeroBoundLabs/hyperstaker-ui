@@ -12,12 +12,15 @@
 
 ## Overview <a name="overview"></a>
 
-Hyperstaker super charges early stage software projects by attaching early contributors to future any project success.
+Hyperstaker is a decentralized platform which super charges early stage software projects by attaching early contributors to future any project success. It does this by bridging the funding gap between innovation and venture capital by creating utility, value, and demand for Hypercerts. The platform allows users to predict and fund promising public goods projects while securing a vested interest in their success.
 
 ## Features <a name="features"></a>
 
+- Project discovery and funding interface
 - Enables donations to projects
+- Integration with Hypercerts for impact tracking
 - Staking on Hypercerts (coming soon)
+- Retro-funding support
 
 ## Contribute <a name="contribute"></a>
 
@@ -30,7 +33,31 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 <br>
 
+###Partners
+- Hypercerts
+- Allo Protocol
+- Funding the Commons
+
+### Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+### Support
+For support, please open an issue in the GitHub repository or contact the team at [contact information].
+
+
 ## Getting Started
+
+Set up environment variables:
+Create a `.env.local` file in the root directory and add:
+
+Set up environment variables:
+
+```
+NEXT_PUBLIC_WALLETCONNECT_ID=your_wallet_connect_project_id
+```
 
 First, run the development server:
 
