@@ -35,5 +35,17 @@ const projects = [
     bannerUrl: "",
     slug: "fux",
   },
+  {
+    id: "4",
+    recipient: "",
+    name: "NFT.Storage",
+    shortDescription:
+      "NFT.Storage needs you, the NFT community, to help remain operational.",
+    longDescription:
+      "We’re seeking donations so that we can continue our mission of preserving all NFTs as timeless assets—so that NFTs don't become 'dead' because linked images and metadata are not accessible! Without these funds, the future of NFT.Storage will not be guaranteed. Founded and Incubated by: Protocol Labs Core Team: Elizabeth Griffiths Advisors: Jonathan Victor, Jake Loo, Chris Halaska Partners & Key Contributors: Lighthouse.Storage, Halaska Studio, Mooning, Web3.Storage, Jesse Damiani Community Collaborators: Our broader community of contributors advancing NFT.Storage and cultural preservation beyond code",
+    avatarUrl: "/img/nft.storage_logo.svg",
+    bannerUrl: "",
+    slug: "nfts",
+  },
 ];
 export default projects;

@@ -1,3 +1,5 @@
+"use client";
+
 import { ProjectAvatar } from "./ProjectAvatar";
 import { ProjectBanner } from "./ProjectBanner";
 import { Heading } from "./ui/Heading";
@@ -8,6 +10,7 @@ import { type Address } from "viem";
 import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
 import Link from "next/link";
+import { DooglyDonateButton } from "@doogly/doogly-donate-component";
 
 export default function ProjectItem({
   project,
@@ -52,12 +55,28 @@ export default function ProjectItem({
           </Skeleton>
         </div>
 
-        <Link
-          href={`/fund/${project.slug}`}
-          className="block mt-6 w-full px-4 py-3 text-lg font-medium text-center text-white bg-indigo-600 rounded-md"
-        >
-          Fund this project
-        </Link>
+        {project.id == "4" ? (
+          <DooglyDonateButton
+            buttonText="Donate Now"
+            modalTitle="Save NFT.Storage"
+            config={{
+              destinationChain: "optimism",
+              destinationAddress: "0x8a4c14d50c43363a28647188534db7004112091c",
+              splitsAddress: "0xA968ded9904E0fcB878fa8A0621227BC676e58Fe", // This is the receiver's address
+              hypercertFractionId:
+                "18669932343484209736381511211351394689744896",
+              poolId: 0,
+            }}
+            buttonClassName="block mt-6 w-full px-4 py-3 text-lg font-medium text-center text-white bg-indigo-600 rounded-md"
+          />
+        ) : (
+          <Link
+            href={`/fund/${project.slug}`}
+            className="block mt-6 w-full px-4 py-3 text-lg font-medium text-center text-white bg-indigo-600 rounded-md"
+          >
+            Fund this project
+          </Link>
+        )}
       </article>
     </div>
   );
