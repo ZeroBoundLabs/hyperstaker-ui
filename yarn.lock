@@ -1103,10 +1103,10 @@
     eventemitter3 "^5.0.1"
     preact "^10.24.2"
 
-"@doogly/doogly-donate-component@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@doogly/doogly-donate-component/-/doogly-donate-component-1.0.2.tgz"
-  integrity sha512-9oXDSN40IlwDZNDKjeMlIJWw/4taGyTZaXdn5UhQdhKOfe8Izbc4nNtm0Tn/HYtq/jJivjZQVxu/E0tp1zYTww==
+"@doogly/doogly-donate-component@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.npmjs.org/@doogly/doogly-donate-component/-/doogly-donate-component-1.0.9.tgz"
+  integrity sha512-vX0IYfeyYvTm0Nei/rok/hONX+7qexRMDnUM018D2ZTGrspwUDxirImMDIokIUl9pqcLIaN6WItjOnGXwsSqyw==
   dependencies:
     "@radix-ui/react-dialog" "^1.1.2"
     "@radix-ui/react-label" "^2.1.0"
