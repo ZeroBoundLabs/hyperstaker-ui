@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@hypercerts-org/sdk": "^2.3.0",
     "@mantine/core": "^7.5.3",
     "@mantine/hooks": "^7.5.3",
     "@rainbow-me/rainbowkit": "^2.0.0",
@@ -20,9 +21,11 @@
     "encoding": "^0.1.13",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
+    "pinata-web3": "^0.5.2",
     "pino-pretty": "^10.3.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.54.0",
     "tailwind-variants": "^0.2.0",
     "viem": "2.x",
     "wagmi": "^2.5.7"
