@@ -24,7 +24,7 @@ Hyperstaker is a decentralized platform which super charges early stage software
 
 ## Contribute <a name="contribute"></a>
 
-Contact us on Twitter or Discord to talk
+Contact us on X (formerly Twitter) or Discord to talk
 
 
 <br>
@@ -33,7 +33,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 <br>
 
-###Partners
+### Partners
 - Hypercerts
 - Allo Protocol
 - Funding the Commons
