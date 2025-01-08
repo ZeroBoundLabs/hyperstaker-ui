@@ -4,7 +4,10 @@ import { FormLabel } from "./FormLabel";
 import { FormHelperText } from "./FormHelperText";
 
 interface MultiSelectProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value"> {
+  extends Omit<
+    React.SelectHTMLAttributes<HTMLSelectElement>,
+    "value" | "onChange"
+  > {
   label?: string;
   error?: boolean;
   helperText?: string;

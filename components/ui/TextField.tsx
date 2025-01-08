@@ -4,7 +4,12 @@ import { FormControl } from "./FormControl";
 import { FormLabel } from "./FormLabel";
 import { FormHelperText } from "./FormHelperText";
 
-interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextFieldProps
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement> &
+      React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    "rows"
+  > {
   label?: string;
   error?: boolean;
   helperText?: string;
@@ -14,7 +19,10 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   margin?: "none" | "normal" | "dense";
 }
 
-export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
+export const TextField = forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  TextFieldProps
+>(
   (
     {
       label,
@@ -33,13 +41,16 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         {label && <FormLabel>{label}</FormLabel>}
         {multiline ? (
           <textarea
-            ref={ref as any}
+            ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
             rows={rows}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...props}
+            {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
           />
         ) : (
-          <Input ref={ref} {...props} />
+          <Input
+            ref={ref as React.ForwardedRef<HTMLInputElement>}
+            {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+          />
         )}
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>

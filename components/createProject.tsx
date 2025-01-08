@@ -607,7 +607,7 @@ export default function CreateProject() {
           <LinearProgress
             variant="determinate"
             value={(currentStep + 1) * (100 / steps.length)}
-            style={{ margin: "16px 0" }}
+            className="mx-16"
           />
 
           {steps.map((step, index) => (
@@ -619,7 +619,9 @@ export default function CreateProject() {
               {index < currentStep && "✓ "}
               {step}
               {completedSteps[
-                ["ipfsHash", "alloProfileId", "hypercertId"][index]
+                ["ipfsHash", "alloProfileId", "hypercertId"][
+                  index
+                ] as keyof typeof completedSteps
               ] && (
                 <span
                   style={{
@@ -630,8 +632,10 @@ export default function CreateProject() {
                 >
                   (ID:{" "}
                   {completedSteps[
-                    ["ipfsHash", "alloProfileId", "hypercertId"][index]
-                  ].slice(0, 6)}
+                    ["ipfsHash", "alloProfileId", "hypercertId"][
+                      index
+                    ] as keyof typeof completedSteps
+                  ]?.slice(0, 6)}
                   ...)
                 </span>
               )}

@@ -7,6 +7,7 @@ export const useHypercertClient = () => {
 
   const client = new HypercertClient({
     environment: ENVIRONMENT,
+    // @ts-ignore
     walletClient,
   });
 
