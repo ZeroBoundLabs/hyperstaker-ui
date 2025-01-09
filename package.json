@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
@@ -28,7 +29,8 @@
     "react-hook-form": "^7.54.0",
     "tailwind-variants": "^0.2.0",
     "viem": "2.x",
-    "wagmi": "^2.5.7"
+    "wagmi": "^2.5.7",
+    "husky": "9.1.7"
   },
   "devDependencies": {
     "@types/node": "^20",
