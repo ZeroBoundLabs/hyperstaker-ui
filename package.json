@@ -30,7 +30,8 @@
     "tailwind-variants": "^0.2.0",
     "viem": "2.x",
     "wagmi": "^2.5.7",
-    "husky": "9.1.7"
+    "husky": "9.1.7",
+    "vercel": "39.2.6"
   },
   "devDependencies": {
     "@types/node": "^20",
