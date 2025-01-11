@@ -4,7 +4,7 @@ import CreateProject from "@/components/createProject";
 
 export default function Page() {
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto flex justify-center">
       <CreateProject />
     </div>
   );

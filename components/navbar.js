@@ -8,7 +8,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 const Navbar = () => {
   const navigation = [
     { page: "Home", url: "/" },
-    { page: "Projects", url: "/projects" },
+    { page: "My Projects", url: "/projects" },
+    { page: "Explore", url: "/explore" }
   ];
 
   return (

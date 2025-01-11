@@ -25,7 +25,7 @@ const Hero = () => {
                 Join the project waiting list
               </Link>
               <Link
-                href="/projects"
+                href="/explore"
                 className="px-8 py-4 text-lg font-medium text-center text-white bg-indigo-600 rounded-md "
               >
                 Fund public goods
