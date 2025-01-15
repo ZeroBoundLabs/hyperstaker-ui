@@ -8,7 +8,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 const Navbar = () => {
   const navigation = [
     { page: "Home", url: "/" },
-    { page: "Projects", url: "/projects" },
+    { page: "My Projects", url: "/projects" },
+    { page: "Explore", url: "/explore" }
   ];
 
   return (
@@ -85,7 +86,7 @@ const Navbar = () => {
               <li className="mr-3 nav__item" key={index}>
                 <Link
                   href={menu.url}
-                  className="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
+                  className="inline-block px-4 py-2 text-lg font-normal text-white no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
                 >
                   {menu.page}
                 </Link>
