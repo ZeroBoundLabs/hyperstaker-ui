@@ -8,6 +8,13 @@ function AllocateForm() {
     const [inputs, setInputs] = useState({}); // State to hold input values
     const allocateForm = useForm();
 
+    // Add new state for allocation history
+    const [allocationHistory] = useState([
+        { address: "0x7B4fd15B495b5700aF2C193f52D830e51C049366", allocated: "5.0", redeemed: "3.2" },
+        { address: "0x264f9EF85C21DE49451c3636116668889Ca41aab", allocated: "2.5", redeemed: "1.0" },
+        { address: "example.eth", allocated: "3.0", redeemed: "0.0" },
+    ]);
+
     const handleInputChange = (address, value) => {
         setInputs(prev => ({ ...prev, [address]: value }));
     };
@@ -27,6 +34,14 @@ function AllocateForm() {
           allocateForm.resetField("address"); // Clear the input field in the form
       }
   };
+
+    // Calculate totals
+    const totals = allocationHistory.reduce((acc, curr) => {
+        return {
+            allocated: acc.allocated + parseFloat(curr.allocated),
+            redeemed: acc.redeemed + parseFloat(curr.redeemed)
+        };
+    }, { allocated: 0, redeemed: 0 });
 
     return (
       <div>
@@ -55,24 +70,59 @@ function AllocateForm() {
             </div>
         </form>
         <form>
-        <div className="space-y-4 space-x-4">
-          <h4>Add Contributor</h4>
-          <TextField
-              label="Address"
-              fullWidth
-              margin="normal"
-              {...allocateForm.register("address", {
-                required: "Address is required",
-              })}
-            />
-            <div className="flex justify-center mt-5">
-            <Button type="button" onClick={handleAddAddress}>
-              Add
-            </Button>
-            </div>
-            
-        </div>
+          <div className="space-y-4 space-x-4">
+            <h4>Add Contributor</h4>
+            <TextField
+                label="Address"
+                fullWidth
+                margin="normal"
+                {...allocateForm.register("address", {
+                  required: "Address is required",
+                })}
+              />
+              <div className="flex justify-center mt-5">
+              <Button type="button" onClick={handleAddAddress}>
+                Add
+              </Button>
+              </div>
+              
+          </div>
         </form>
+        <div className="mt-8">
+            <h4>Allocation History</h4>
+            <div className="overflow-x-auto">
+                <table className="min-w-full table-auto mt-4">
+                    <thead>
+                        <tr className="bg-gray-600">
+                            <th className="px-4 py-2 text-left">ETH Address</th>
+                            <th className="px-4 py-2 text-right">Amount Allocated</th>
+                            <th className="px-4 py-2 text-right">Amount Redeemed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {allocationHistory.map((item, index) => (
+                            <tr key={index} className="border-b">
+                                <td className="px-4 py-2">{item.address}</td>
+                                <td className="px-4 py-2 text-right">{item.allocated} ETH</td>
+                                <td className="px-4 py-2 text-right">{item.redeemed} ETH</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                    <tfoot className="bg-gray-600">
+                        <tr>
+                            <td className="px-4 py-2 font-bold">Totals</td>
+                            <td className="px-4 py-2 text-right font-bold">{totals.allocated.toFixed(1)} ETH</td>
+                            <td className="px-4 py-2 text-right font-bold">{totals.redeemed.toFixed(1)} ETH</td>
+                        </tr>
+                        <tr className="bg-gray-600">
+                            <td colSpan="3" className="px-4 py-2 text-right font-bold">
+                                Remaining in Pool: {(totals.allocated - totals.redeemed).toFixed(1)} ETH
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
 
         </div>
     );
