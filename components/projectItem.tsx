@@ -13,10 +13,14 @@ export default function ProjectItem({
   project,
   metadata,
   isLoading,
+  buttonText,
+  buttonLink,
 }: {
   project: Project;
   metadata: Metadata;
   isLoading: boolean;
+  buttonText: string;
+  buttonLink: string;
 }) {
   return (
     <div className="basis-10/12 mx-2">
@@ -53,10 +57,10 @@ export default function ProjectItem({
         </div>
 
         <Link
-          href={`/fund/${project.slug}`}
+          href={buttonLink}
           className="block mt-6 w-full px-4 py-3 text-lg font-medium text-center text-white bg-indigo-600 rounded-md"
         >
-          Fund this project
+          {buttonText}
         </Link>
       </article>
     </div>

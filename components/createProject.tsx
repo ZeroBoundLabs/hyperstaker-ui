@@ -313,7 +313,7 @@ export default function CreateProject() {
   ];
 
   return (
-    <Box sx={{ width: "100%", p: 3 }}>
+    <Box sx={{ width: "80%", p: 3 }}>
       <Stepper activeStep={activeStep}>
         <Step>
           <StepLabel>Create Allo Pool</StepLabel>

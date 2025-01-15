@@ -2,7 +2,7 @@ import "@mantine/core/styles.css";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { MantineProvider } from "@mantine/core";
+import { createTheme, MantineProvider } from "@mantine/core";
 
 //const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +23,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider defaultColorScheme="dark">{children}</MantineProvider>
+        {/* {children} */}
       </body>
     </html>
   );
