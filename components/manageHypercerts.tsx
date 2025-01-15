@@ -2,11 +2,11 @@
 import { ProjectAvatar } from "./ProjectAvatar";
 import { ProjectBanner } from "./ProjectBanner";
 import { Skeleton } from "./ui/Skeleton";
+import { Button } from "./ui/Button";
 import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
-import AllocateForm from "./allocate";
 
-export default function ManageProject({
+export default function ManageHypercert({
   project,
   metadata,
   isLoading,
@@ -94,7 +94,75 @@ export default function ManageProject({
               </Skeleton> */}
             </div>
             <div className="flex-1">
-              <AllocateForm />
+              <div className="px-4 mt-8">
+                <div className="grid grid-cols-1 gap-6">
+                  {/* Staked Hypercerts Section */}
+                  <section className="border rounded-lg p-4">
+                    <h2 className="text-xl font-semibold mb-4">
+                      My Staked Hypercerts
+                    </h2>
+                    <div className="space-y-4">
+                      {/* Example staked item - Replace with actual data mapping */}
+                      <div className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded">
+                        <div>
+                          <p className="font-medium">Fraction ID: #123</p>
+                          <p className="text-sm text-gray-200">
+                            Yield: 0.5 ETH
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => console.log("Unstake")}
+                        >
+                          Unstake
+                        </Button>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Unstaked Hypercerts Section */}
+                  <section className="border rounded-lg p-4">
+                    <h2 className="text-xl font-semibold mb-4">
+                      My Unstaked Hypercerts
+                    </h2>
+                    <div className="space-y-4">
+                      {/* Example unstaked item - Replace with actual data mapping */}
+                      <div className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded">
+                        <div>
+                          <p className="font-medium">Fraction ID: #456</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => console.log("Stake")}
+                        >
+                          Stake
+                        </Button>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Retirable Hypercerts Section */}
+                  <section className="border rounded-lg p-4">
+                    <h2 className="text-xl font-semibold mb-4">
+                      My Retirable Hypercerts
+                    </h2>
+                    <div className="space-y-4">
+                      {/* Example retirable item - Replace with actual data mapping */}
+                      <div className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded">
+                        <div>
+                          <p className="font-medium">Fraction ID: #789</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => console.log("Retire")}
+                        >
+                          Retire
+                        </Button>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -9,7 +9,8 @@ const Navbar = () => {
   const navigation = [
     { page: "Home", url: "/" },
     { page: "My Projects", url: "/projects" },
-    { page: "Explore", url: "/explore" }
+    { page: "Explore", url: "/explore" },
+    {page: "My Contributions", url: "/contributions"}
   ];
 
   return (
