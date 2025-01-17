@@ -603,11 +603,10 @@ export default function CreateProject() {
         onClose={() => stepStatus !== "processing" && setIsModalOpen(false)}
       >
         <Box sx={{ p: 4, width: "400px" }}>
-          <h2>Creating Project</h2>
+          <h2 className="text-[#100437]">Creating Project</h2>
           <LinearProgress
             variant="determinate"
             value={(currentStep + 1) * (100 / steps.length)}
-            className="mx-16"
           />
 
           {steps.map((step, index) => (
