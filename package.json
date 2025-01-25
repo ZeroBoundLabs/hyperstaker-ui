@@ -31,7 +31,9 @@
     "viem": "2.x",
     "wagmi": "^2.5.7",
     "husky": "9.1.7",
-    "vercel": "39.2.6"
+    "vercel": "39.2.6",
+    "gql.tada": "^1.8.10",
+    "graphql-request": "^7.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",
