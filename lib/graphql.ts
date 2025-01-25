@@ -1,4 +1,3 @@
-// @ts-ignore
 import { introspection } from "@/graphql-hypercerts-env";
 import { initGraphQLTada } from "gql.tada";
 

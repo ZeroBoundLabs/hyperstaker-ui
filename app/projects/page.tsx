@@ -14,11 +14,11 @@ export default function Page() {
 
   useEffect(() => {
     getHypercertsOfUser(account.address as string).then((total) => {
-      const filteredTotal = total.filter(
+      const filteredTotal = total?.filter(
         (t: any) => t.fractions.data[0].metadata != null
       );
       const uniqueHypercerts = new Map();
-      filteredTotal.forEach((item) => {
+      filteredTotal?.forEach((item) => {
         uniqueHypercerts.set(item.hypercert_id, item);
       });
       setCampaigns(Array.from(uniqueHypercerts.values()));
@@ -65,10 +65,12 @@ export default function Page() {
       query
     );
 
-    res.hypercerts.data.map((d) => {
+    res?.hypercerts.data?.map((d: any) => {
       let totalUnits = 0;
-      d.fractions.data.map((i) => (totalUnits = totalUnits + Number(i.units)));
-      d["totalUnits"] = totalUnits;
+      d?.fractions?.data?.map(
+        (i: any) => (totalUnits = totalUnits + Number(i.units))
+      );
+      (d as any)["totalUnits"] = totalUnits;
     });
 
     return res.hypercerts.data;
