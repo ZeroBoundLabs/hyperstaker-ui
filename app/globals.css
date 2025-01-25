@@ -8,13 +8,13 @@
   --background-end-rgb: 0, 0, 0;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 h1 {
   @apply mb-8 text-4xl font-bold;
   /* Adjust text size and font weight as needed */
@@ -33,15 +33,12 @@ h4 {
 h5 {
   @apply  mb-2 text-xl md:text-xl font-medium;
 }
-body {
+
+html, body {
+  background-color: rgb(var(--background-start-rgb));
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
+
 p {
   @apply text-base leading-relaxed mb-4;
 }

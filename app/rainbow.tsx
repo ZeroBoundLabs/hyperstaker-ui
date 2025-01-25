@@ -5,6 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import {
+  Chain,
   // arbitrum,
   // base,
   // mainnet,
@@ -15,12 +16,19 @@ import {
 } from "wagmi/chains";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
+const customSepolia: Chain = {
+  ...sepolia,
+  rpcUrls: {
+    default: {
+      http: ["https://ethereum-sepolia-rpc.publicnode.com"],
+    },
+  },
+};
 const config = getDefaultConfig({
   appName: "RainbowKit App",
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID as string,
   chains: [
-    // mainnet,
-    sepolia,
+    customSepolia,
     ...(process.env.NEXT_PUBLIC_WALLETCONNECT_ID === "true" ? [sepolia] : []),
   ],
   ssr: true,
