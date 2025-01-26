@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/Button";
 import { Box, BoxProps } from "./ui/Box";
@@ -10,15 +10,12 @@ import { DatePicker } from "./ui/DatePicker";
 import { FileUpload } from "./ui/FileUpload";
 import { useHypercertClient } from "@/hooks/useHypercertClient";
 import { alloAbi, alloRegistryAbi, hyperfundFactoryAbi } from "./data";
-import {
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from "wagmi";
-import { Abi, encodeAbiParameters } from "viem";
+import { useAccount, useWriteContract, useConfig } from "wagmi";
+import { Abi, encodeAbiParameters, decodeAbiParameters } from "viem";
 import { formatHypercertData, TransferRestrictions } from "@hypercerts-org/sdk";
 import { Modal } from "./ui/Modal";
 import { LinearProgress } from "./ui/LinearProgress";
+import { waitForTransactionReceipt } from "@wagmi/core";
 
 interface AlloPoolFormData {
   title: string;
@@ -86,6 +83,7 @@ export default function CreateProject() {
   const alloContract = useWriteContract();
 
   const { client } = useHypercertClient();
+  const wagmiConfig = useConfig();
 
   const [completedSteps, setCompletedSteps] = useState<{
     ipfsHash?: string;
@@ -102,14 +100,10 @@ export default function CreateProject() {
   const [errorMessage, setErrorMessage] = useState("");
   const [currentStep, setCurrentStep] = useState(0);
 
-  const {
-    data: txReceipt,
-    isError: txError,
-    isLoading: txLoading,
-  } = useWaitForTransactionReceipt({
-    hash: completedSteps.pendingTxHash,
-    // enabled: !!completedSteps.pendingTxHash,
-  });
+  // Add a useEffect to monitor completedSteps changes
+  useEffect(() => {
+    console.log("CompletedSteps updated:", completedSteps);
+  }, [completedSteps]);
 
   const handleAlloPoolSubmit = async (data: AlloPoolFormData) => {
     console.log("Allo Pool Data:", data);
@@ -169,8 +163,8 @@ export default function CreateProject() {
           setAlloMetadataIPFSHash(alloProfileMetadataIPFS);
         }
 
-        setCompletedSteps((prev) => ({
-          ...prev,
+        setCompletedSteps((prevSteps) => ({
+          ...prevSteps,
           ipfsHash: alloProfileMetadataIPFS ?? alloMetadataIPFSHash,
         }));
       }
@@ -199,11 +193,22 @@ export default function CreateProject() {
             ],
           });
 
-          // Store the transaction hash
-          setCompletedSteps((prev) => ({
-            ...prev,
-            pendingTxHash: tx,
-          }));
+          await handleTransaction(tx, "Allo Profile");
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          const profileId = txReceipt.logs[0]?.topics?.[1];
+          console.log("Allo profile Id: ", profileId);
+
+          if (profileId) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              alloProfileId: profileId,
+              pendingTxHash: undefined, // Clear the pending tx hash
+            }));
+          }
         } catch (error) {
           console.error("Error creating Allo Profile:", error);
           setStepStatus("error");
@@ -214,27 +219,6 @@ export default function CreateProject() {
           );
           return;
         }
-      }
-
-      // Watch for transaction receipt
-      if (txReceipt && !completedSteps.alloProfileId) {
-        // Extract profileId from transaction receipt events
-        const profileId = txReceipt.logs[0]?.topics?.[1];
-
-        if (profileId) {
-          setCompletedSteps((prev) => ({
-            ...prev,
-            alloProfileId: profileId,
-            pendingTxHash: undefined, // Clear the pending tx hash
-          }));
-        }
-      }
-
-      // Handle transaction error
-      if (txError) {
-        setStepStatus("error");
-        setErrorMessage("Transaction failed");
-        return;
       }
 
       // Step 3: Create Hypercert (skip if already completed)
@@ -264,8 +248,6 @@ export default function CreateProject() {
           excludedRights: [...hypercertData.excludedRights],
         });
 
-        console.log(metadata.data);
-
         if (!metadata.data) {
           throw new Error("Metadata is null");
         }
@@ -273,34 +255,29 @@ export default function CreateProject() {
         const txId = await client.mintHypercert({
           metaData: metadata.data,
           totalUnits: BigInt(hypercertData.goal) * BigInt(1000000),
-          transferRestriction: TransferRestrictions.FromCreatorOnly,
+          transferRestriction: TransferRestrictions.AllowAll,
         });
 
-        setCompletedSteps((prev) => ({
-          ...prev,
-          pendingTxHash: txId,
-        }));
-      }
+        await handleTransaction(txId, "Hypercert");
 
-      // Watch for transaction receipt
-      if (txReceipt && !completedSteps.hypercertId) {
+        const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+          hash: txId,
+          confirmations: 3,
+        });
+
         // Extract hypercertId from transaction receipt events
-        const hypercertId = txReceipt.logs[0]?.topics?.[1];
-
+        const hypercertId = decodeAbiParameters(
+          [{ name: "id", type: "uint256" }],
+          txReceipt.logs[0]?.topics[1] as `0x${string}`
+        )[0];
+        console.log("HypercertId: ", hypercertId);
         if (hypercertId) {
-          setCompletedSteps((prev) => ({
-            ...prev,
-            hypercertId: hypercertId,
+          setCompletedSteps((prevSteps) => ({
+            ...prevSteps,
+            hypercertId: hypercertId.toString(),
             pendingTxHash: undefined, // Clear the pending tx hash
           }));
         }
-      }
-
-      // Handle transaction error
-      if (txError) {
-        setStepStatus("error");
-        setErrorMessage("Transaction failed");
-        return;
       }
 
       // Step 4: Create Allo Pool
@@ -327,7 +304,7 @@ export default function CreateProject() {
 
           // Pool metadata
           const metadata = {
-            pointer: completedSteps.ipfsHash,
+            pointer: completedSteps.ipfsHash ?? "",
             protocol: "1",
           };
           const tx = await alloContract.writeContractAsync({
@@ -336,9 +313,8 @@ export default function CreateProject() {
             abi: alloAbi as Abi,
             functionName: "createPool",
             args: [
-              completedSteps.alloProfileId,
+              completedSteps.alloProfileId as `0x${string}`,
               "0x8564d522b19836b7F5B4324E7Ee8Cb41810E9F9e", // Strategy address - DirectGrantsSimpleStrategy
-
               initializationData,
               "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", // USDC on Sepolia
               BigInt(0), // amount
@@ -347,37 +323,28 @@ export default function CreateProject() {
             ],
           });
 
-          setCompletedSteps((prev) => ({
-            ...prev,
-            pendingTxHash: tx,
-          }));
+          await handleTransaction(tx, "Allo Pool");
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          // Extract alloPoolId from transaction receipt events
+          const alloPoolId = txReceipt.logs[0]?.topics?.[1];
+
+          if (alloPoolId) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              alloPoolId: alloPoolId,
+              pendingTxHash: undefined, // Clear the pending tx hash
+            }));
+          }
         } catch (error) {
           console.error("Error creating Allo Pool:", error);
           setStepStatus("error");
           setErrorMessage("Failed to create Allo Pool");
           return;
         }
-      }
-
-      // Watch for transaction receipt
-      if (txReceipt && !completedSteps.alloPoolId) {
-        // Extract alloPoolId from transaction receipt events
-        const alloPoolId = txReceipt.logs[0]?.topics?.[1];
-
-        if (alloPoolId) {
-          setCompletedSteps((prev) => ({
-            ...prev,
-            alloPoolId: alloPoolId,
-            pendingTxHash: undefined, // Clear the pending tx hash
-          }));
-        }
-      }
-
-      // Handle transaction error
-      if (txError) {
-        setStepStatus("error");
-        setErrorMessage("Transaction failed");
-        return;
       }
 
       // Step 5: Create Hyperfund Pool
@@ -394,37 +361,31 @@ export default function CreateProject() {
             ],
           });
 
-          setCompletedSteps((prev) => ({
-            ...prev,
-            pendingTxHash: tx,
-          }));
+          await handleTransaction(tx, "Hyperfund Pool");
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          // Extract hyperfundAddress from transaction receipt events
+          const hyperfundAddress = decodeAbiParameters(
+            [{ name: "hypperfundAddress", type: "address" }],
+            txReceipt.logs[2]?.topics?.[1] as `0x${string}`
+          )[0];
+
+          if (hyperfundAddress) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              hyperfundAddress: hyperfundAddress,
+              pendingTxHash: undefined, // Clear the pending tx hash
+            }));
+          }
         } catch (error) {
           console.error("Error creating Hyperfund Pool:", error);
           setStepStatus("error");
           setErrorMessage("Failed to create Hyperfund Pool");
           return;
         }
-      }
-
-      // Watch for transaction receipt
-      if (txReceipt && !completedSteps.hyperfundAddress) {
-        // Extract hyperfundAddress from transaction receipt events
-        const hyperfundAddress = txReceipt.logs[0]?.topics?.[1];
-
-        if (hyperfundAddress) {
-          setCompletedSteps((prev) => ({
-            ...prev,
-            hyperfundAddress: hyperfundAddress,
-            pendingTxHash: undefined, // Clear the pending tx hash
-          }));
-        }
-      }
-
-      // Handle transaction error
-      if (txError) {
-        setStepStatus("error");
-        setErrorMessage("Transaction failed");
-        return;
       }
 
       // Step 6: Create Hyperstaker
@@ -441,37 +402,31 @@ export default function CreateProject() {
             ],
           });
 
-          setCompletedSteps((prev) => ({
-            ...prev,
-            pendingTxHash: tx,
-          }));
+          await handleTransaction(tx, "Hyperstaker");
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          // Extract hyperstakerAddress from transaction receipt events
+          const hyperstakerAddress = decodeAbiParameters(
+            [{ name: "hyperstakerAddress", type: "address" }],
+            txReceipt.logs[2]?.topics?.[1] as `0x${string}`
+          )[0];
+
+          if (hyperstakerAddress) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              hyperstakerAddress: hyperstakerAddress,
+              pendingTxHash: undefined, // Clear the pending tx hash
+            }));
+          }
         } catch (error) {
           console.error("Error creating Hyperstaker:", error);
           setStepStatus("error");
           setErrorMessage("Failed to create Hyperstaker");
           return;
         }
-      }
-
-      // Watch for transaction receipt
-      if (txReceipt && !completedSteps.hyperstakerAddress) {
-        // Extract hyperstakerAddress from transaction receipt events
-        const hyperstakerAddress = txReceipt.logs[0]?.topics?.[1];
-
-        if (hyperstakerAddress) {
-          setCompletedSteps((prev) => ({
-            ...prev,
-            hyperstakerAddress: hyperstakerAddress,
-            pendingTxHash: undefined, // Clear the pending tx hash
-          }));
-        }
-      }
-
-      // Handle transaction error
-      if (txError) {
-        setStepStatus("error");
-        setErrorMessage("Transaction failed");
-        return;
       }
 
       setStepStatus("success");
@@ -511,6 +466,25 @@ export default function CreateProject() {
     "Creating Hyperfund Pool",
     "Creating Hyperstaker",
   ];
+
+  // Modify the transaction handling to be more explicit
+  const handleTransaction = async (tx: `0x${string}`, stepName: string) => {
+    console.log(`Starting ${stepName} transaction:`, tx);
+
+    // Update state and wait for it to complete
+    await new Promise<void>((resolve) => {
+      setCompletedSteps((prevSteps) => {
+        console.log("Setting pendingTxHash:", tx);
+        console.log("Previous steps:", prevSteps);
+        return {
+          ...prevSteps,
+          pendingTxHash: tx,
+        };
+      });
+      // Give React time to update state
+      setTimeout(resolve, 0);
+    });
+  };
 
   return (
     <Box sx={{ width: "80%", p: 3 }}>
