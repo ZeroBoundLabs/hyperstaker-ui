@@ -22,7 +22,6 @@ export default function Page() {
         uniqueHypercerts.set(item.hypercert_id, item);
       });
       setCampaigns(Array.from(uniqueHypercerts.values()));
-      console.log(Array.from(uniqueHypercerts.values()));
     });
   }, [account]);
 
@@ -81,14 +80,30 @@ export default function Page() {
       <div className="my-5 text-2xl flex justify-center">My Projects</div>
       <div className="flex flex-row">
         {projects &&
-          projects.map((project, key) => (
+          campaigns.map((project, key) => (
             <ProjectItem
               key={key}
-              project={project}
-              metadata={projectMetadata}
+              project={{
+                id: project.fractions.data[0].metadata.id,
+                recipient: account.address as string,
+                name: project.fractions.data[0].metadata.name,
+                shortDescription:
+                  project.fractions.data[0].metadata.description.split(".")[0],
+                longDescription: project.fractions.data[0].metadata.description,
+                avatarUrl: "/img/default-logo.png",
+                bannerUrl: "/img/default-banner.jpg",
+                slug: project.hypercert_id,
+              }}
+              metadata={{
+                data: {
+                  bio: project.fractions.data[0].metadata.description,
+                  impactCategory:
+                    project.fractions.data[0].metadata.impact_scope,
+                },
+              }}
               isLoading={false}
               buttonText="Manage"
-              buttonLink={`/manage/${project.slug}`}
+              buttonLink={`/manage/${project.hypercert_id}`}
             />
           ))}
       </div>
