@@ -129,9 +129,9 @@ export default function CreateProject() {
 
     try {
       // Step 1: Save to IPFS (skip if already completed)
+      let alloProfileMetadataIPFS = "";
       if (!completedSteps.ipfsHash) {
         setCurrentStep(0);
-        let alloProfileMetadataIPFS: string;
 
         if (!alloMetadataIPFSHash) {
           if (alloPoolData.logoImg) {
