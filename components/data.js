@@ -78,4 +78,43 @@ const alloRegistryAbi = [{
   type: "function",
 }]
 
-export { benefitOne, benefitTwo, alloRegistryAbi };
+const alloAbi = [{
+  inputs:[
+    {internalType:"bytes32",name:"_profileId",type:"bytes32"},
+    {internalType:"address",name:"_strategy",type:"address"},
+    {internalType:"bytes",name:"_initStrategyData",type:"bytes"},
+    {internalType:"address",name:"_token",type:"address"},
+    {"internalType":"uint256","name":"_amount","type":"uint256"},
+    {
+      components:[
+        {internalType:"uint256","name":"protocol","type":"uint256"},
+        {internalType:"string","name":"pointer","type":"string"}
+      ],
+      internalType:"struct Metadata",name:"_metadata",type:"tuple"
+    },
+    {internalType:"address[]",name:"_managers",type:"address[]"}
+  ],
+  name:"createPool",
+  outputs:[
+    {internalType:"uint256",name:"poolId",type:"uint256"}
+  ],
+  stateMutability:"payable",
+  type:"function"
+}]
+
+const hyperfundFactoryAbi = [{
+  inputs:[
+    {internalType:"uint256",name:"hypercertId",type:"uint256"},
+    {internalType:"address",name:"manager",type:"address"}
+  ],
+  name:"createHyperfund",
+  outputs:[
+    {internalType:"address",name:"",type:"address"}
+  ],
+  stateMutability:"nonpayable",
+  type:"function"
+}, {
+  "inputs": [{ "internalType": "uint256", "name": "hypercertId", "type": "uint256" }, { "internalType": "address", "name": "manager", "type": "address" }], "name": "createHyperstaker", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "nonpayable", "type": "function"
+}]
+
+export { benefitOne, benefitTwo, alloRegistryAbi, alloAbi, hyperfundFactoryAbi };

@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/Button";
 import { Box, BoxProps } from "./ui/Box";
@@ -9,16 +9,13 @@ import { TextField } from "./ui/TextField";
 import { DatePicker } from "./ui/DatePicker";
 import { FileUpload } from "./ui/FileUpload";
 import { useHypercertClient } from "@/hooks/useHypercertClient";
-import { alloRegistryAbi } from "./data";
-import {
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from "wagmi";
-import { Abi } from "viem";
+import { alloAbi, alloRegistryAbi, hyperfundFactoryAbi } from "./data";
+import { useAccount, useWriteContract, useConfig } from "wagmi";
+import { Abi, encodeAbiParameters, decodeAbiParameters } from "viem";
 import { formatHypercertData, TransferRestrictions } from "@hypercerts-org/sdk";
 import { Modal } from "./ui/Modal";
 import { LinearProgress } from "./ui/LinearProgress";
+import { waitForTransactionReceipt } from "@wagmi/core";
 
 interface AlloPoolFormData {
   title: string;
@@ -86,12 +83,15 @@ export default function CreateProject() {
   const alloContract = useWriteContract();
 
   const { client } = useHypercertClient();
+  const wagmiConfig = useConfig();
 
   const [completedSteps, setCompletedSteps] = useState<{
     ipfsHash?: string;
     alloProfileId?: string;
     hypercertId?: string;
-    pendingTxHash?: `0x${string}`;
+    alloPoolId?: string;
+    hyperfundAddress?: string;
+    hyperstakerAddress?: string;
   }>({});
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,14 +99,10 @@ export default function CreateProject() {
   const [errorMessage, setErrorMessage] = useState("");
   const [currentStep, setCurrentStep] = useState(0);
 
-  const {
-    data: txReceipt,
-    isError: txError,
-    isLoading: txLoading,
-  } = useWaitForTransactionReceipt({
-    hash: completedSteps.pendingTxHash,
-    // enabled: !!completedSteps.pendingTxHash,
-  });
+  // Add a useEffect to monitor completedSteps changes
+  useEffect(() => {
+    console.log("CompletedSteps updated:", completedSteps);
+  }, [completedSteps]);
 
   const handleAlloPoolSubmit = async (data: AlloPoolFormData) => {
     console.log("Allo Pool Data:", data);
@@ -123,6 +119,7 @@ export default function CreateProject() {
   };
 
   const handleSubmitProject = async () => {
+    const stateRef = { current: { ...completedSteps } };
     const alloPoolData = alloPoolForm.getValues();
     const hypercertData = hypercertForm.getValues();
 
@@ -132,9 +129,9 @@ export default function CreateProject() {
 
     try {
       // Step 1: Save to IPFS (skip if already completed)
+      let alloProfileMetadataIPFS = "";
       if (!completedSteps.ipfsHash) {
         setCurrentStep(0);
-        let alloProfileMetadataIPFS: string;
 
         if (!alloMetadataIPFSHash) {
           if (alloPoolData.logoImg) {
@@ -166,18 +163,20 @@ export default function CreateProject() {
           setAlloMetadataIPFSHash(alloProfileMetadataIPFS);
         }
 
-        setCompletedSteps((prev) => ({
-          ...prev,
+        stateRef.current = {
+          ...stateRef.current,
           ipfsHash: alloProfileMetadataIPFS ?? alloMetadataIPFSHash,
-        }));
+        };
+        setCompletedSteps(stateRef.current);
       }
 
       // Step 2: Create Allo Profile (skip if already completed)
-      if (!completedSteps.pendingTxHash) {
+      if (!completedSteps.alloProfileId) {
         setCurrentStep(1);
         try {
           console.log(alloPoolData);
           const tx = await alloContract.writeContractAsync({
+            // Allo registry contract
             address: "0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3",
             abi: alloRegistryAbi as Abi,
             functionName: "createProfile",
@@ -189,15 +188,28 @@ export default function CreateProject() {
                 protocol: "1",
               },
               account.address as string,
-              alloPoolData.members,
+              alloPoolData.members
+                ? alloPoolData.members
+                : [account.address as string],
             ],
           });
 
-          // Store the transaction hash
-          setCompletedSteps((prev) => ({
-            ...prev,
-            pendingTxHash: tx,
-          }));
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          const profileId = txReceipt.logs[0]?.topics?.[1];
+          console.log("Allo profile Id: ", profileId);
+
+          if (profileId) {
+            stateRef.current = {
+              ...stateRef.current,
+              alloProfileId: profileId,
+            };
+            setCompletedSteps(stateRef.current);
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
         } catch (error) {
           console.error("Error creating Allo Profile:", error);
           setStepStatus("error");
@@ -208,27 +220,6 @@ export default function CreateProject() {
           );
           return;
         }
-      }
-
-      // Watch for transaction receipt
-      if (txReceipt && !completedSteps.alloProfileId) {
-        // Extract profileId from transaction receipt events
-        const profileId = txReceipt.logs[0]?.topics?.[1]; // Adjust based on your contract's event structure
-
-        if (profileId) {
-          setCompletedSteps((prev) => ({
-            ...prev,
-            alloProfileId: profileId,
-            pendingTxHash: undefined, // Clear the pending tx hash
-          }));
-        }
-      }
-
-      // Handle transaction error
-      if (txError) {
-        setStepStatus("error");
-        setErrorMessage("Transaction failed");
-        return;
       }
 
       // Step 3: Create Hypercert (skip if already completed)
@@ -251,15 +242,12 @@ export default function CreateProject() {
             new Date(hypercertData.impactTimeframeStart).getTime() / 1000,
           impactTimeframeEnd:
             new Date(hypercertData.impactTimeframeEnd).getTime() / 1000,
-          contributors: [
-            account.address as string,
-            ...hypercertData.contributorsList,
-          ],
+          contributors: hypercertData.contributorsList
+            ? [account.address as string, ...hypercertData.contributorsList]
+            : [account.address as string],
           rights: [...hypercertData.rights],
           excludedRights: [...hypercertData.excludedRights],
         });
-
-        console.log(metadata.data);
 
         if (!metadata.data) {
           throw new Error("Metadata is null");
@@ -268,13 +256,178 @@ export default function CreateProject() {
         const txId = await client.mintHypercert({
           metaData: metadata.data,
           totalUnits: BigInt(hypercertData.goal) * BigInt(1000000),
-          transferRestriction: TransferRestrictions.FromCreatorOnly,
+          transferRestriction: TransferRestrictions.AllowAll,
         });
 
-        setCompletedSteps((prev) => ({
-          ...prev,
-          hypercertId: txId,
-        }));
+        const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+          hash: txId,
+          confirmations: 3,
+        });
+
+        // Extract hypercertId from transaction receipt events
+        const hypercertId = decodeAbiParameters(
+          [{ name: "id", type: "uint256" }],
+          txReceipt.logs[0]?.topics[1] as `0x${string}`
+        )[0];
+
+        if (hypercertId) {
+          stateRef.current = {
+            ...stateRef.current,
+            hypercertId: hypercertId.toString(),
+          };
+          setCompletedSteps(stateRef.current);
+
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+
+      // Step 4: Create Allo Pool
+      if (!completedSteps.alloPoolId) {
+        setCurrentStep(3);
+        try {
+          // Strategy initialization data
+          const initializationData = encodeAbiParameters(
+            [
+              { name: "useRegistryAnchor", type: "bool" },
+              { name: "metadataRequired", type: "bool" },
+              { name: "grantAmountRequired", type: "bool" },
+              { name: "registrationStartTime", type: "uint64" },
+              { name: "registrationEndTime", type: "uint64" },
+            ],
+            [
+              true,
+              false,
+              false,
+              BigInt(Date.now().toString()) / BigInt(1000),
+              BigInt((Date.now() + 10000000).toString()) / BigInt(1000),
+            ]
+          );
+
+          // Pool metadata
+          const metadata = {
+            pointer: stateRef.current.ipfsHash ?? "",
+            protocol: "1",
+          };
+          const tx = await alloContract.writeContractAsync({
+            // Allo contract address
+            address: "0x1133eA7Af70876e64665ecD07C0A0476d09465a1",
+            abi: alloAbi as Abi,
+            functionName: "createPool",
+            args: [
+              stateRef.current.alloProfileId as `0x${string}`,
+              "0x8564d522b19836b7F5B4324E7Ee8Cb41810E9F9e", // Strategy address - DirectGrantsSimpleStrategy
+              initializationData,
+              "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", // USDC on Sepolia
+              BigInt(0), // amount
+              metadata,
+              [], // managers array
+            ],
+          });
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          // Extract alloPoolId from transaction receipt events
+          const alloPoolId = decodeAbiParameters(
+            [{ name: "id", type: "uint256" }],
+            txReceipt.logs[0]?.topics?.[1] as `0x${string}`
+          )[0];
+
+          if (alloPoolId) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              alloPoolId: alloPoolId.toString(),
+            }));
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        } catch (error) {
+          console.error("Error creating Allo Pool:", error);
+          setStepStatus("error");
+          setErrorMessage("Failed to create Allo Pool");
+          return;
+        }
+      }
+
+      // Step 5: Create Hyperfund Pool
+      if (!completedSteps.hyperfundAddress) {
+        setCurrentStep(4);
+        try {
+          const tx = await alloContract.writeContractAsync({
+            address: "0x547FB258EE66CD9dc4cCd75b2e24Da75f134B6d6",
+            abi: hyperfundFactoryAbi as Abi,
+            functionName: "createHyperfund",
+            args: [
+              BigInt(stateRef.current.hypercertId as string),
+              account.address as `0x${string}`,
+            ],
+          });
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          // Extract hyperfundAddress from transaction receipt events
+          const hyperfundAddress = decodeAbiParameters(
+            [{ name: "hypperfundAddress", type: "address" }],
+            txReceipt.logs[2]?.topics?.[1] as `0x${string}`
+          )[0];
+
+          if (hyperfundAddress) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              hyperfundAddress: hyperfundAddress,
+            }));
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        } catch (error) {
+          console.error("Error creating Hyperfund Pool:", error);
+          setStepStatus("error");
+          setErrorMessage("Failed to create Hyperfund Pool");
+          return;
+        }
+      }
+
+      // Step 6: Create Hyperstaker
+      if (!completedSteps.hyperstakerAddress) {
+        setCurrentStep(5);
+        try {
+          const tx = await alloContract.writeContractAsync({
+            address: "0x547FB258EE66CD9dc4cCd75b2e24Da75f134B6d6",
+            abi: hyperfundFactoryAbi as Abi,
+            functionName: "createHyperstaker",
+            args: [
+              BigInt(stateRef.current.hypercertId as string),
+              account.address as `0x${string}`,
+            ],
+          });
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: tx,
+          });
+
+          // Extract hyperstakerAddress from transaction receipt events
+          const hyperstakerAddress = decodeAbiParameters(
+            [{ name: "hyperstakerAddress", type: "address" }],
+            txReceipt.logs[2]?.topics?.[1] as `0x${string}`
+          )[0];
+
+          if (hyperstakerAddress) {
+            setCompletedSteps((prevSteps) => ({
+              ...prevSteps,
+              hyperstakerAddress: hyperstakerAddress,
+            }));
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        } catch (error) {
+          console.error("Error creating Hyperstaker:", error);
+          setStepStatus("error");
+          setErrorMessage("Failed to create Hyperstaker");
+          return;
+        }
       }
 
       setStepStatus("success");
@@ -310,6 +463,9 @@ export default function CreateProject() {
     "Saving to IPFS",
     "Creating Allo Profile",
     "Creating Hypercert",
+    "Creating Allo Pool",
+    "Creating Hyperfund Pool",
+    "Creating Hyperstaker",
   ];
 
   return (
@@ -543,7 +699,6 @@ export default function CreateProject() {
             margin="normal"
             {...(hypercertForm.register("contributorsList"),
             {
-              required: true,
               onChange: (e) => {
                 hypercertForm.setValue("contributorsList", [
                   ...e.target.value
@@ -618,9 +773,14 @@ export default function CreateProject() {
               {index < currentStep && "✓ "}
               {step}
               {completedSteps[
-                ["ipfsHash", "alloProfileId", "hypercertId"][
-                  index
-                ] as keyof typeof completedSteps
+                [
+                  "ipfsHash",
+                  "alloProfileId",
+                  "hypercertId",
+                  "alloPoolId",
+                  "hyperfundAddress",
+                  "hyperstakerAddress",
+                ][index] as keyof typeof completedSteps
               ] && (
                 <span
                   style={{
@@ -631,9 +791,14 @@ export default function CreateProject() {
                 >
                   (ID:{" "}
                   {completedSteps[
-                    ["ipfsHash", "alloProfileId", "hypercertId"][
-                      index
-                    ] as keyof typeof completedSteps
+                    [
+                      "ipfsHash",
+                      "alloProfileId",
+                      "hypercertId",
+                      "alloPoolId",
+                      "hyperfundAddress",
+                      "hyperstakerAddress",
+                    ][index] as keyof typeof completedSteps
                   ]?.slice(0, 6)}
                   ...)
                 </span>
