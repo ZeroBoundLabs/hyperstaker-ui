@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import ProjectItem from "../../components/projectItem";
 import projects from "../../projectData";
-import projectMetadata from "../../metaData";
 
 import { graphql } from "@/lib/graphql";
 import request from "graphql-request";
@@ -78,7 +77,7 @@ export default function Page() {
   return (
     <div className="container mx-auto mt-5">
       <div className="my-5 text-2xl flex justify-center">My Projects</div>
-      <div className="flex flex-row">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 gap-4">
         {projects &&
           campaigns.map((project, key) => (
             <ProjectItem

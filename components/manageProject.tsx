@@ -4,17 +4,51 @@ import { ProjectBanner } from "./ProjectBanner";
 import { Skeleton } from "./ui/Skeleton";
 import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
-import AllocateForm from "./allocate";
+import { TextField } from "./ui/TextField";
+import { useForm } from "react-hook-form";
+import { useWriteContract } from "wagmi";
+import { hyperfundAbi } from "./data";
+import { Abi } from "viem";
+import { Button } from "./ui/Button";
+import AllocateForm from "./allocate.js";
+import { useState } from "react";
+import { Modal } from "./ui/Modal";
 
 export default function ManageProject({
   project,
-  metadata,
   isLoading,
+  hyperfund,
 }: {
   project: Project;
   metadata: Metadata;
   isLoading: boolean;
+  hyperfund: string;
 }) {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const assetForm = useForm();
+  const hyperfundContract = useWriteContract();
+
+  const handleAddAddress = async () => {
+    try {
+      const newAsset = assetForm.getValues("address");
+      const multiplier = assetForm.getValues("multiplier");
+
+      const tx = await hyperfundContract.writeContractAsync({
+        address: hyperfund as `0x${string}`,
+        abi: hyperfundAbi as Abi,
+        functionName: "allowlistToken",
+        args: [newAsset, multiplier],
+      });
+
+      assetForm.reset();
+      setTxHash(tx);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
+
   return (
     <div className="basis-10/12 mx-auto">
       {/* data-testid={`project-${project.id}`} */}
@@ -89,16 +123,57 @@ export default function ManageProject({
                   </div>
                 </Skeleton>
               </div>
+              <div>
+                <h4>Add Supported Assets</h4>
+                <div>
+                  <TextField
+                    label="Address"
+                    fullWidth
+                    margin="normal"
+                    {...assetForm.register("address", {
+                      required: true,
+                    })}
+                  />
+                </div>
+                <div>
+                  <TextField
+                    label="Multiplier"
+                    fullWidth
+                    margin="normal"
+                    {...assetForm.register("multiplier", {
+                      required: true,
+                    })}
+                  />
+                </div>
+                <div>
+                  <Button type="button" onClick={handleAddAddress}>
+                    Add Token
+                  </Button>
+                </div>
+              </div>
               {/* <Skeleton isLoading={isLoading} className="w-[100px]">
                 <ImpactCategories tags={metadata?.data?.impactCategory} />
               </Skeleton> */}
             </div>
             <div className="flex-1">
-              <AllocateForm />
+              <AllocateForm hyperfund={hyperfund} />
             </div>
           </div>
         </div>
       </article>
+
+      <Modal open={showSuccessModal} onClose={() => setShowSuccessModal(false)}>
+        <div className="p-6">
+          <h3 className="text-black text-lg font-medium mb-4">
+            Transaction Successful!
+          </h3>
+          <p className="text-gray-600 mb-4">Transaction Hash:</p>
+          <p className="break-all text-sm bg-gray-100 p-2 rounded">{txHash}</p>
+          <Button className="mt-4" onClick={() => setShowSuccessModal(false)}>
+            Close
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

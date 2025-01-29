@@ -9,6 +9,7 @@ import request from "graphql-request";
 export default function Page({ params }: { params: { slug: string } }) {
   const account = useAccount();
   const [project, setProject] = useState<any>();
+  const [hyperfund, setHyperfund] = useState<string>();
 
   useEffect(() => {
     getHypercertsOfUser(account.address as string).then((total) => {
@@ -20,6 +21,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         uniqueHypercerts.set(item.hypercert_id, item);
       });
       setProject(Array.from(uniqueHypercerts.values())[0]);
+    });
+
+    getHyperfund().then((hyperfund) => {
+      setHyperfund(hyperfund);
     });
   }, [account]);
 
@@ -73,6 +78,32 @@ export default function Page({ params }: { params: { slug: string } }) {
     return res.hypercerts.data;
   }
 
+  async function getHyperfund() {
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_HYPERINDEXER_ENDPOINT as unknown as URL,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `
+          query MyQuery {
+            hyperfundCreated(hypercert: "${params.slug.split("-")[2]}") {
+              hypercert
+              hyperfund
+              manager
+            }
+          }
+        `,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    return data.data.hyperfundCreated.hyperfund;
+  }
+
   return (
     <div className="container mx-auto">
       <div className="">
@@ -95,6 +126,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             },
           }}
           isLoading={false}
+          hyperfund={hyperfund as string}
         />
       </div>
     </div>

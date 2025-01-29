@@ -117,4 +117,67 @@ const hyperfundFactoryAbi = [{
   "inputs": [{ "internalType": "uint256", "name": "hypercertId", "type": "uint256" }, { "internalType": "address", "name": "manager", "type": "address" }], "name": "createHyperstaker", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "nonpayable", "type": "function"
 }]
 
-export { benefitOne, benefitTwo, alloRegistryAbi, alloAbi, hyperfundFactoryAbi };
+const hyperfundAbi = [{
+  type: "function",
+  name: "allowlistToken",
+  inputs: [
+    { name: "_token", type: "address", internalType: "address" },
+    { name: "_multiplier", type: "int256", internalType: "int256" },
+  ],
+  outputs: [],
+  stateMutability: "nonpayable",
+},
+{
+  type: "function",
+  name: "donate",
+  inputs: [
+    { name: "_token", type: "address", internalType: "address" },
+    { name: "_amount", type: "uint256", internalType: "uint256" },
+  ],
+  outputs: [],
+  stateMutability: "payable",
+}, {
+  type: "function",
+  name: "nonfinancialContribution",
+  inputs: [
+    { name: "_contributor", type: "address", internalType: "address" },
+    { name: "_units", type: "uint256", internalType: "uint256" },
+  ],
+  outputs: [],
+  stateMutability: "nonpayable",
+}]
+
+const hypercertMinterAbi = [
+  {
+    inputs: [
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "address", name: "operator", type: "address" },
+    ],
+    name: "isApprovedForAll",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "operator", type: "address" },
+      { internalType: "bool", name: "approved", type: "bool" },
+    ],
+    name: "setApprovalForAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+const contracts = {
+  [11155111]: {
+    hypercertMinterContract: "0xa16DFb32Eb140a6f3F2AC68f41dAd8c7e83C4941",
+    hyperstakerFactoryContract: "0xFa9525E19196285Dc69D178C9Fc9F210F9e7F718",
+    alloContract: "0x1133eA7Af70876e64665ecD07C0A0476d09465a1",
+    directGrantsSimpleStrategy: "0x8564d522b19836b7F5B4324E7Ee8Cb41810E9F9e",
+    usdc: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"
+  }
+}
+
+export { benefitOne, benefitTwo, alloRegistryAbi, alloAbi, hyperfundFactoryAbi, hyperfundAbi, hypercertMinterAbi, contracts };
