@@ -9,13 +9,19 @@ import { TextField } from "./ui/TextField";
 import { DatePicker } from "./ui/DatePicker";
 import { FileUpload } from "./ui/FileUpload";
 import { useHypercertClient } from "@/hooks/useHypercertClient";
-import { alloAbi, alloRegistryAbi, hyperfundFactoryAbi } from "./data";
+import {
+  alloAbi,
+  alloRegistryAbi,
+  hyperfundFactoryAbi,
+  contracts,
+} from "./data";
 import { useAccount, useWriteContract, useConfig } from "wagmi";
 import { Abi, encodeAbiParameters, decodeAbiParameters } from "viem";
 import { formatHypercertData, TransferRestrictions } from "@hypercerts-org/sdk";
 import { Modal } from "./ui/Modal";
 import { LinearProgress } from "./ui/LinearProgress";
 import { waitForTransactionReceipt } from "@wagmi/core";
+import { useRouter } from "next/navigation";
 
 interface AlloPoolFormData {
   title: string;
@@ -98,6 +104,8 @@ export default function CreateProject() {
   const [stepStatus, setStepStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [currentStep, setCurrentStep] = useState(0);
+
+  const router = useRouter();
 
   // Add a useEffect to monitor completedSteps changes
   useEffect(() => {
@@ -310,14 +318,14 @@ export default function CreateProject() {
           };
           const tx = await alloContract.writeContractAsync({
             // Allo contract address
-            address: "0x1133eA7Af70876e64665ecD07C0A0476d09465a1",
+            address: contracts[account.chainId].alloContract,
             abi: alloAbi as Abi,
             functionName: "createPool",
             args: [
               stateRef.current.alloProfileId as `0x${string}`,
-              "0x8564d522b19836b7F5B4324E7Ee8Cb41810E9F9e", // Strategy address - DirectGrantsSimpleStrategy
+              contracts[account.chainId].directGrantsSimpleStrategy, // Strategy address - DirectGrantsSimpleStrategy
               initializationData,
-              "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", // USDC on Sepolia
+              contracts[account.chainId].usdc, // USDC on Sepolia
               BigInt(0), // amount
               metadata,
               [], // managers array
@@ -355,7 +363,7 @@ export default function CreateProject() {
         setCurrentStep(4);
         try {
           const tx = await alloContract.writeContractAsync({
-            address: "0x547FB258EE66CD9dc4cCd75b2e24Da75f134B6d6",
+            address: contracts[account.chainId].hyperstakerFactoryContract,
             abi: hyperfundFactoryAbi as Abi,
             functionName: "createHyperfund",
             args: [
@@ -395,7 +403,7 @@ export default function CreateProject() {
         setCurrentStep(5);
         try {
           const tx = await alloContract.writeContractAsync({
-            address: "0x547FB258EE66CD9dc4cCd75b2e24Da75f134B6d6",
+            address: contracts[account.chainId].hyperstakerFactoryContract,
             abi: hyperfundFactoryAbi as Abi,
             functionName: "createHyperstaker",
             args: [
@@ -431,7 +439,10 @@ export default function CreateProject() {
       }
 
       setStepStatus("success");
-      setTimeout(() => setIsModalOpen(false), 2000);
+      setTimeout(() => {
+        setIsModalOpen(false);
+        router.push("/projects");
+      }, 2000);
     } catch (error) {
       console.error("Error creating project:", error);
       setStepStatus("error");
