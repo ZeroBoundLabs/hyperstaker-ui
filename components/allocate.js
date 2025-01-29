@@ -46,9 +46,9 @@ function AllocateForm({
             
             try {
                 const response = await fetch(process.env.NEXT_PUBLIC_HYPERINDEXER_ENDPOINT, {
-                    method: 'POST',
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
                         query: `
@@ -91,7 +91,7 @@ function AllocateForm({
                     setAllocationHistory(history);
                 }
             } catch (error) {
-                console.error('Error fetching allocations:', error);
+                console.error("Error fetching allocations:", error);
             }
         };
 
@@ -181,7 +181,6 @@ function AllocateForm({
 
                 allocateForm.reset();
                 setInputs({})
-                setTxHash(tx);
                 setShowSuccessModal(true);
             } catch (e) {
                 console.error("Transaction failed: ", e);

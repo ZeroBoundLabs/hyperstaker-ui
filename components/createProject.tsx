@@ -131,6 +131,10 @@ export default function CreateProject() {
     const alloPoolData = alloPoolForm.getValues();
     const hypercertData = hypercertForm.getValues();
 
+    if (!account.chainId) {
+      throw new Error("Please connect wallet");
+    }
+
     setIsModalOpen(true);
     setStepStatus("processing");
     setErrorMessage("");
@@ -318,14 +322,17 @@ export default function CreateProject() {
           };
           const tx = await alloContract.writeContractAsync({
             // Allo contract address
-            address: contracts[account.chainId].alloContract,
+            address: contracts[account.chainId as keyof typeof contracts]
+              .alloContract as `0x${string}`,
             abi: alloAbi as Abi,
             functionName: "createPool",
             args: [
               stateRef.current.alloProfileId as `0x${string}`,
-              contracts[account.chainId].directGrantsSimpleStrategy, // Strategy address - DirectGrantsSimpleStrategy
+              contracts[account.chainId as keyof typeof contracts]
+                .directGrantsSimpleStrategy as `0x${string}`, // Strategy address - DirectGrantsSimpleStrategy
               initializationData,
-              contracts[account.chainId].usdc, // USDC on Sepolia
+              contracts[account.chainId as keyof typeof contracts]
+                .usdc as `0x${string}`, // USDC on Sepolia
               BigInt(0), // amount
               metadata,
               [], // managers array
@@ -363,7 +370,8 @@ export default function CreateProject() {
         setCurrentStep(4);
         try {
           const tx = await alloContract.writeContractAsync({
-            address: contracts[account.chainId].hyperstakerFactoryContract,
+            address: contracts[account.chainId as keyof typeof contracts]
+              .hyperstakerFactoryContract as `0x${string}`,
             abi: hyperfundFactoryAbi as Abi,
             functionName: "createHyperfund",
             args: [
@@ -403,7 +411,8 @@ export default function CreateProject() {
         setCurrentStep(5);
         try {
           const tx = await alloContract.writeContractAsync({
-            address: contracts[account.chainId].hyperstakerFactoryContract,
+            address: contracts[account.chainId as keyof typeof contracts]
+              .hyperstakerFactoryContract as `0x${string}`,
             abi: hyperfundFactoryAbi as Abi,
             functionName: "createHyperstaker",
             args: [
