@@ -145,7 +145,53 @@ const hyperfundAbi = [{
   ],
   outputs: [],
   stateMutability: "nonpayable",
+}, {
+  type: "function",
+  name: "redeem",
+  inputs: [
+    { name: "_fractionId", type: "uint256", internalType: "uint256" },
+    { name: "_token", type: "address", internalType: "address" },
+  ],
+  outputs: [],
+  stateMutability: "nonpayable",
+}, {
+  type: "function",
+  name: "nonfinancialContributions",
+  inputs: [{ name: "contributor", type: "address", internalType: "address" }],
+  outputs: [{ name: "units", type: "uint256", internalType: "uint256" }],
+  stateMutability: "view",
 }]
+
+const hyperstakerAbi = [
+  {
+    type: "function",
+    name: "setReward",
+    inputs: [
+      { name: "_rewardToken", type: "address", internalType: "address" },
+      { name: "_rewardAmount", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "stake",
+    inputs: [
+      { name: "_hypercertId", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "unstake",
+    inputs: [
+      { name: "_hypercertId", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+]
 
 const hypercertMinterAbi = [
   {
@@ -180,4 +226,4 @@ const contracts = {
   }
 }
 
-export { benefitOne, benefitTwo, alloRegistryAbi, alloAbi, hyperfundFactoryAbi, hyperfundAbi, hypercertMinterAbi, contracts };
+export { benefitOne, benefitTwo, alloRegistryAbi, alloAbi, hyperfundFactoryAbi, hyperfundAbi, hypercertMinterAbi, hyperstakerAbi, contracts };

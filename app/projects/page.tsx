@@ -27,35 +27,35 @@ export default function Page() {
   async function getHypercertsOfUser(walletAddress: string) {
     const query = graphql(`
       query MyQuery {
-        hypercerts(
-          where: {fractions: {owner_address: {eq: "${walletAddress}"}}}
-        ) {
-          data {
-            contract {
-              chain_id
-            }
-            hypercert_id
-            fractions {
-              count
-              data {
-                metadata {
-                  id
-                  name
-                  description
-                  external_url
-                  impact_scope
-                  impact_timeframe_from
-                  impact_timeframe_to
-                  work_timeframe_from
-                  work_timeframe_to
-                }
-                units
+          hypercerts(
+            where: {creator_address: {contains: "${walletAddress}"}}
+          ) {
+            data {
+              contract {
+                chain_id
               }
+              hypercert_id
+              fractions {
+                count
+                data {
+                  metadata {
+                    id
+                    name
+                    description
+                    external_url
+                    impact_scope
+                    impact_timeframe_from
+                    impact_timeframe_to
+                    work_timeframe_from
+                    work_timeframe_to
+                  }
+                  units
+                }
+              }
+              units
             }
-            units
           }
         }
-      }
     `);
 
     const res = await request(

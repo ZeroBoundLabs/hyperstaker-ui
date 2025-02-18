@@ -5,16 +5,84 @@ import { Skeleton } from "./ui/Skeleton";
 import { Button } from "./ui/Button";
 import Project from "../interfaces/Project";
 import Metadata from "../interfaces/Metadata";
+import { useWriteContract } from "wagmi";
+import { hyperfundAbi, hyperstakerAbi } from "./data";
+import { Abi } from "viem";
+import { useState } from "react";
+import { Modal } from "./ui/Modal";
 
 export default function ManageHypercert({
   project,
   metadata,
   isLoading,
+  hyperfund,
+  hyperstaker,
+  unstakedFractions,
+  stakedFractions,
+  nonFinancialContributions,
 }: {
   project: Project;
   metadata: Metadata;
   isLoading: boolean;
+  hyperfund: string;
+  hyperstaker: string;
+  unstakedFractions: string[];
+  stakedFractions: string[];
+  nonFinancialContributions: bigint | number;
 }) {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const hyperstakerContract = useWriteContract();
+  const hyperfundContract = useWriteContract();
+
+  const handleStakeFraction = async (fractionId: string) => {
+    try {
+      const tx = await hyperstakerContract.writeContractAsync({
+        address: hyperstaker as `0x${string}`,
+        abi: hyperstakerAbi as Abi,
+        functionName: "stake",
+        args: [fractionId],
+      });
+
+      setTxHash(tx);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
+
+  const handleUnStakeFraction = async (fractionId: string) => {
+    try {
+      const tx = await hyperstakerContract.writeContractAsync({
+        address: hyperstaker as `0x${string}`,
+        abi: hyperstakerAbi as Abi,
+        functionName: "unstake",
+        args: [fractionId],
+      });
+
+      setTxHash(tx);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
+
+  const handleRetireFraction = async (fractionId: string, token: string) => {
+    try {
+      const tx = await hyperfundContract.writeContractAsync({
+        address: hyperfund as `0x${string}`,
+        abi: hyperfundAbi as Abi,
+        functionName: "redeem",
+        args: [fractionId, token],
+      });
+
+      setTxHash(tx);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
+
   return (
     <div className="basis-10/12 mx-auto">
       {/* data-testid={`project-${project.id}`} */}
@@ -103,20 +171,25 @@ export default function ManageHypercert({
                     </h2>
                     <div className="space-y-4">
                       {/* Example staked item - Replace with actual data mapping */}
-                      <div className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded">
-                        <div>
-                          <p className="font-medium">Fraction ID: #123</p>
-                          <p className="text-sm text-gray-200">
-                            Yield: 0.5 ETH
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => console.log("Unstake")}
+                      {stakedFractions.map((s) => (
+                        <div
+                          className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded"
+                          key={s}
                         >
-                          Unstake
-                        </Button>
-                      </div>
+                          <div>
+                            <p className="font-medium">Fraction ID: {s}</p>
+                            {/* <p className="text-sm text-gray-200">
+                            Yield: 0.5 ETH
+                          </p> */}
+                          </div>
+                          <Button
+                            variant="outline"
+                            onClick={() => handleUnStakeFraction(s)}
+                          >
+                            Unstake
+                          </Button>
+                        </div>
+                      ))}
                     </div>
                   </section>
 
@@ -127,37 +200,53 @@ export default function ManageHypercert({
                     </h2>
                     <div className="space-y-4">
                       {/* Example unstaked item - Replace with actual data mapping */}
-                      <div className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded">
-                        <div>
-                          <p className="font-medium">Fraction ID: #456</p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => console.log("Stake")}
+                      {unstakedFractions.map((f) => (
+                        <div
+                          className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded"
+                          key={f}
                         >
-                          Stake
-                        </Button>
-                      </div>
+                          <div>
+                            <p className="font-medium">Fraction ID: {f}</p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="outline"
+                              onClick={() => handleStakeFraction(f)}
+                            >
+                              Stake
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                const tokenAddress = prompt(
+                                  "Enter token address:"
+                                );
+                                if (tokenAddress) {
+                                  handleRetireFraction(f, tokenAddress);
+                                }
+                              }}
+                            >
+                              Retire
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </section>
 
                   {/* Retirable Hypercerts Section */}
                   <section className="border rounded-lg p-4">
                     <h2 className="text-xl font-semibold mb-4">
-                      My Retirable Hypercerts
+                      Retire Allowance
                     </h2>
                     <div className="space-y-4">
                       {/* Example retirable item - Replace with actual data mapping */}
                       <div className="flex items-center justify-between p-3 bg-gray-600 dark:bg-gray-800 rounded">
                         <div>
-                          <p className="font-medium">Fraction ID: #789</p>
+                          <p className="font-medium">
+                            {nonFinancialContributions?.toString()} units
+                          </p>
                         </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => console.log("Retire")}
-                        >
-                          Retire
-                        </Button>
                       </div>
                     </div>
                   </section>
@@ -167,6 +256,18 @@ export default function ManageHypercert({
           </div>
         </div>
       </article>
+      <Modal open={showSuccessModal} onClose={() => setShowSuccessModal(false)}>
+        <div className="p-6">
+          <h3 className="text-black text-lg font-medium mb-4">
+            Transaction Successful!
+          </h3>
+          <p className="text-gray-600 mb-4">Transaction Hash:</p>
+          <p className="break-all text-sm bg-gray-100 p-2 rounded">{txHash}</p>
+          <Button className="mt-4" onClick={() => setShowSuccessModal(false)}>
+            Close
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
