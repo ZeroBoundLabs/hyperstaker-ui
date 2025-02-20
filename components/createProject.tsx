@@ -1,4 +1,4 @@
-import { SetStateAction, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/Button";
 import { Box, BoxProps } from "./ui/Box";
@@ -697,19 +697,27 @@ export default function CreateProject() {
             })}
           />
           <DatePicker
-            {...hypercertForm.register("workTimeframeStart")}
+            {...hypercertForm.register("workTimeframeStart", {
+              required: "Work Start Date is required",
+            })}
             label="Work Start Date"
           />
           <DatePicker
-            {...hypercertForm.register("workTimeframeEnd")}
+            {...hypercertForm.register("workTimeframeEnd", {
+              required: "Work End Date is required",
+            })}
             label="Work End Date"
           />
           <DatePicker
-            {...hypercertForm.register("impactTimeframeStart")}
+            {...hypercertForm.register("impactTimeframeStart", {
+              required: "Impact Start Date is required",
+            })}
             label="Impact Start Date"
           />
           <DatePicker
-            {...hypercertForm.register("impactTimeframeEnd")}
+            {...hypercertForm.register("impactTimeframeEnd", {
+              required: "Impact End Date is required",
+            })}
             label="Impact End Date"
           />
           <TextField
@@ -717,8 +725,12 @@ export default function CreateProject() {
             label="Contributors"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("contributorsList"),
-            {
+            error={!!hypercertForm.formState.errors.contributorsList}
+            helperText={
+              hypercertForm.formState.errors.contributorsList?.message
+            }
+            {...hypercertForm.register("contributorsList", {
+              required: "Contributors are required",
               onChange: (e) => {
                 hypercertForm.setValue("contributorsList", [
                   ...e.target.value
@@ -754,6 +766,7 @@ export default function CreateProject() {
             margin="normal"
             {...(hypercertForm.register("excludedRights"),
             {
+              required: true,
               onChange: (e) => {
                 hypercertForm.setValue("excludedRights", [
                   ...e.target.value
