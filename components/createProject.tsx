@@ -848,6 +848,7 @@ export default function CreateProject() {
             <Box sx={{ mt: 2 }}>
               <p style={{ color: "red" }}>Error: {errorMessage}</p>
               <Button
+                className="text-black"
                 variant="contained"
                 onClick={() => {
                   setStepStatus("processing");
