@@ -1,4 +1,4 @@
-import { SetStateAction, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/Button";
 import { Box, BoxProps } from "./ui/Box";
@@ -611,7 +611,7 @@ export default function CreateProject() {
             error={!!hypercertForm.formState.errors.goal}
             helperText={hypercertForm.formState.errors.goal?.message}
             {...hypercertForm.register("goal", {
-              required: true,
+              required: "Please enter project Goal",
               valueAsNumber: true,
             })}
           />
@@ -629,9 +629,8 @@ export default function CreateProject() {
             label="Impact Scope"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("impactScope"),
-            {
-              required: true,
+            {...hypercertForm.register("impactScope", {
+              required: "Impact scope is required",
               onChange: (e) => {
                 hypercertForm.setValue("impactScope", [
                   ...e.target.value
@@ -647,9 +646,8 @@ export default function CreateProject() {
             label="Excluded Impact Scope"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("excludedImpactScope"),
-            {
-              required: true,
+            {...hypercertForm.register("excludedImpactScope", {
+              required: "Excluded impact scope is required",
               onChange: (e) => {
                 hypercertForm.setValue("excludedImpactScope", [
                   ...e.target.value
@@ -665,9 +663,8 @@ export default function CreateProject() {
             label="Work Scope"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("workScope"),
-            {
-              required: true,
+            {...hypercertForm.register("workScope", {
+              required: "Work scope is required",
               onChange: (e) => {
                 hypercertForm.setValue("workScope", [
                   ...e.target.value
@@ -697,19 +694,27 @@ export default function CreateProject() {
             })}
           />
           <DatePicker
-            {...hypercertForm.register("workTimeframeStart")}
+            {...hypercertForm.register("workTimeframeStart", {
+              required: "Work Start Date is required",
+            })}
             label="Work Start Date"
           />
           <DatePicker
-            {...hypercertForm.register("workTimeframeEnd")}
+            {...hypercertForm.register("workTimeframeEnd", {
+              required: "Work End Date is required",
+            })}
             label="Work End Date"
           />
           <DatePicker
-            {...hypercertForm.register("impactTimeframeStart")}
+            {...hypercertForm.register("impactTimeframeStart", {
+              required: "Impact Start Date is required",
+            })}
             label="Impact Start Date"
           />
           <DatePicker
-            {...hypercertForm.register("impactTimeframeEnd")}
+            {...hypercertForm.register("impactTimeframeEnd", {
+              required: "Impact End Date is required",
+            })}
             label="Impact End Date"
           />
           <TextField
@@ -717,8 +722,12 @@ export default function CreateProject() {
             label="Contributors"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("contributorsList"),
-            {
+            error={!!hypercertForm.formState.errors.contributorsList}
+            helperText={
+              hypercertForm.formState.errors.contributorsList?.message
+            }
+            {...hypercertForm.register("contributorsList", {
+              required: "Contributors are required",
               onChange: (e) => {
                 hypercertForm.setValue("contributorsList", [
                   ...e.target.value
@@ -754,6 +763,7 @@ export default function CreateProject() {
             margin="normal"
             {...(hypercertForm.register("excludedRights"),
             {
+              required: true,
               onChange: (e) => {
                 hypercertForm.setValue("excludedRights", [
                   ...e.target.value
@@ -838,6 +848,7 @@ export default function CreateProject() {
             <Box sx={{ mt: 2 }}>
               <p style={{ color: "red" }}>Error: {errorMessage}</p>
               <Button
+                className="text-black"
                 variant="contained"
                 onClick={() => {
                   setStepStatus("processing");
