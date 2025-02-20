@@ -611,7 +611,7 @@ export default function CreateProject() {
             error={!!hypercertForm.formState.errors.goal}
             helperText={hypercertForm.formState.errors.goal?.message}
             {...hypercertForm.register("goal", {
-              required: true,
+              required: "Please enter project Goal",
               valueAsNumber: true,
             })}
           />
@@ -629,9 +629,8 @@ export default function CreateProject() {
             label="Impact Scope"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("impactScope"),
-            {
-              required: true,
+            {...hypercertForm.register("impactScope", {
+              required: "Impact scope is required",
               onChange: (e) => {
                 hypercertForm.setValue("impactScope", [
                   ...e.target.value
@@ -647,9 +646,8 @@ export default function CreateProject() {
             label="Excluded Impact Scope"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("excludedImpactScope"),
-            {
-              required: true,
+            {...hypercertForm.register("excludedImpactScope", {
+              required: "Excluded impact scope is required",
               onChange: (e) => {
                 hypercertForm.setValue("excludedImpactScope", [
                   ...e.target.value
@@ -665,9 +663,8 @@ export default function CreateProject() {
             label="Work Scope"
             fullWidth
             margin="normal"
-            {...(hypercertForm.register("workScope"),
-            {
-              required: true,
+            {...hypercertForm.register("workScope", {
+              required: "Work scope is required",
               onChange: (e) => {
                 hypercertForm.setValue("workScope", [
                   ...e.target.value
